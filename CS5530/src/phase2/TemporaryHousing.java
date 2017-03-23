@@ -14,4 +14,9 @@ public class TemporaryHousing {
 		boolean result = false;
 		return result;
 	}
+	
+	//adds a new PH to the system
+	public void addNewPH(String name, String address, String url, String yearBuilt){
+		
+	}
 }

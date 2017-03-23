@@ -184,7 +184,26 @@ public class main {
 						} 
 						else if (c == 2) // record new PH
 						{
-							System.out.println("record new PH");
+							String name;
+							String address;
+							String url;
+							String yearBuilt;
+							
+							System.out.println("Enter the details for the new permanent housing:");
+							System.out.println("Name:");
+							while((name = in.readLine()) == null && name.length() == 0);
+							
+							System.out.println("Address:");
+							while((address = in.readLine()) == null && address.length() == 0);
+							
+							System.out.println("URL:");
+							while((url = in.readLine()) == null && url.length() == 0);
+							
+							System.out.println("Year built:");
+							while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
+							
+							TemporaryHousing th = new TemporaryHousing();
+							th.addNewPH(name, address, url, yearBuilt);
 						} 
 						else if (c == 3) // update existing PH
 						{

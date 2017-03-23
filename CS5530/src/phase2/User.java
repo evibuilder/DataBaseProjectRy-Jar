@@ -17,7 +17,7 @@ public class User {
 	
 	//returns a user id from the given user name
 	public int userIdFromName(String name){
-		return 0;
+		return -1;
 	}
 	
 	//test a password against a current username, if the username doesn't exist or if the password doesn't match return false
