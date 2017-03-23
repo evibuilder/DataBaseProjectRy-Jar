@@ -11,8 +11,13 @@ public class User {
 	}
 	
 	//rates the user from the given user with the rating or trusted or not-trusted
-	public void rateUser(String nameUserDoingRating, int idOfUserGettingRated, String rating){
+	public void rateUser(int idOfUserDoingRating, int idOfUserGettingRated, String rating){
 		
+	}
+	
+	//returns a user id from the given user name
+	public int userIdFromName(String name){
+		return 0;
 	}
 	
 	//test a password against a current username, if the username doesn't exist or if the password doesn't match return false
@@ -33,5 +38,11 @@ public class User {
 		boolean result = false;
 		
 		return result;
+	}
+	
+	//calculate two degrees of separation
+	public String calculateDegreeOfSeparation(int firstUserId, int secondUserId){
+		
+		return null;
 	}
 }

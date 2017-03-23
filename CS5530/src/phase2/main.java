@@ -62,6 +62,7 @@ public class main {
 		String choice;
 		String username = "";
 		String sql = null;
+		int currentUserId;
 		int c = 0;
 		try {
 			// remember to replace the password
@@ -146,6 +147,10 @@ public class main {
 
 			// reset choice
 			c = 0;
+			
+			//get current user id
+			User user = new User();
+			currentUserId = user.userIdFromName(username);
 
 			// main menu
 			while (true) {
@@ -334,7 +339,6 @@ public class main {
 							System.out.println("Which user would you like to rate?:");
 							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
 							
-							User user = new User();
 							String usersWithName = user.showUsersWithName(nameUserToBeRated);
 
 							if(usersWithName == ""){
@@ -374,7 +378,7 @@ public class main {
 								if(i == 1) {rating = "Trusted";}
 								else if(i == 2) {rating = "Not-Trusted";}
 
-								user.rateUser(username, idUserToBeRated, rating);
+								user.rateUser(currentUserId, idUserToBeRated, rating);
 							}
 						}
 					}
