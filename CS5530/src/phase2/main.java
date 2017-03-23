@@ -21,7 +21,8 @@ public class main {
 		System.out.println("2. Feedback:");
 		System.out.println("3. Two degrees of separation:");
 		System.out.println("4. Statistics:");
-		System.out.println("5. exit:");
+		System.out.println("5. Administration:");
+		System.out.println("6. exit:");
 		System.out.println("please enter your choice:");
 	}
 
@@ -162,7 +163,7 @@ public class main {
 
 					continue;
 				}
-				if (c < 1 | c > 5)
+				if (c < 1 | c > 6)
 					continue;
 				if (c == 1) // temporary housing
 				{
@@ -548,6 +549,17 @@ public class main {
 					// reset value and go back to main menu
 					c = 0;
 				} 
+				else if(c == 5) //administration
+				{
+					if(user.isAdmin(username)){
+						//TODO: fill out admin rewards
+					}
+					else
+					{
+						System.out.println("You do not have admin privileges");
+						c = 0;
+					}
+				}
 				else 
 				{
 					//TODO: show the summary of TH reservations and confirm
