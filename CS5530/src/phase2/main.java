@@ -18,9 +18,42 @@ public class main {
 	
 	public static void displayMainMenu()
 	{
-    	 System.out.println("1. search a course by cname and dname:");
-    	 System.out.println("2. enter your own query:");
+		 System.out.println("        Main Menu    ");
+    	 System.out.println("1. Temporary Housing:");
+    	 System.out.println("2. Feedback:");
+    	 System.out.println("3. Two degrees of separation:");
+    	 System.out.println("4. Statistics:");
     	 System.out.println("3. exit:");
+    	 System.out.println("please enter your choice:");
+	}
+	
+	public static void displayTemporaryHousingMenu(){
+		 System.out.println("        Temporary Housing Menu     ");
+		 System.out.println("1. Reserve TH:");
+		 System.out.println("2. Record new permanent housing:");
+		 System.out.println("3. Update existing permanent housing:");
+		 System.out.println("4. Record stay:");
+		 System.out.println("5. Make favorite");
+		 System.out.println("6. Browse temporary housing:");
+		 System.out.println("7. Back to main menu:");
+    	 System.out.println("please enter your choice:");
+	}
+	
+	public static void displayFeedbackMenu(){
+		 System.out.println("        Feedback Menu    ");
+		 System.out.println("1. Record feedback:");
+		 System.out.println("2. Assess existing feedback:");
+		 System.out.println("3. Rate user:");
+		 System.out.println("4. Back to main menu:");
+    	 System.out.println("please enter your choice:");
+	}	
+	
+	public static void displayStatisticsMenu(){
+		 System.out.println("        Statistics Menu    ");
+		 System.out.println("1. Most popular temporary housing:");
+		 System.out.println("2. Most expensive temporary housing:");
+		 System.out.println("3. Most highly rated permanent housing:");
+		 System.out.println("4. Back to main menu:");
     	 System.out.println("please enter your choice:");
 	}
 	
@@ -111,7 +144,7 @@ public class main {
 	             //main menu
 	             while(true)
 	             {
-	            	 displayLoginMenu();
+	            	 displayMainMenu();
 	            	 while ((choice = in.readLine()) == null && choice.length() == 0);
 	            	 try{
 	            		 c = Integer.parseInt(choice);

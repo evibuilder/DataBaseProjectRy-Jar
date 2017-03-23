@@ -22,7 +22,7 @@ public class Login {
 	}
 	
 	public boolean checkForUsernameUniqueness(String username){
-		boolean result = true;
+		boolean result = false;
 		
 		return result;
 	}
