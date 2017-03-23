@@ -339,48 +339,40 @@ public class main {
 							System.out.println("Which user would you like to rate?:");
 							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
 							
-							String usersWithName = user.showUsersWithName(nameUserToBeRated);
-
-							if(usersWithName == ""){
-								System.out.println("There were no users with the given name:");
+							int idUserToBeRated = -1;
+							idUserToBeRated = user.userIdFromName(nameUserToBeRated);
+							
+							if(idUserToBeRated == -1){
+								System.out.println("user " + nameUserToBeRated + " could not be found");
+								c = 0;
 							}
-							else{
-								System.out.println("These were the user(s) with the given name:");
-
-								System.out.println("Please select the ID of the user you would like to rate:");
-								int idUserToBeRated;
-								String line;
-								while((line = in.readLine()) == null && line.length() == 0);
-								try{
-									idUserToBeRated = Integer.parseInt(line);
-								}catch(Exception e){
-									System.out.println(e.getMessage());
-									throw e;
-								}
-
+							else
+							{
 								int i = 0;
 								while(i != 1 && i != 2)
 								{
 									System.out.println("Please select the rating you would like to give this user:");
 									System.out.println("1. Trusted:");
 									System.out.println("2. Not-trusted:");
-									
+										
 									String lineToBeParsed;
 									while((lineToBeParsed = in.readLine()) == null && lineToBeParsed.length() == 0);
 									try{
-										i = Integer.parseInt(lineToBeParsed);
+											i = Integer.parseInt(lineToBeParsed);
 									}catch (Exception e){
-										continue;
+											continue;
 									}
 								}
-								
+									
 								String rating = "";
 								if(i == 1) {rating = "Trusted";}
 								else if(i == 2) {rating = "Not-Trusted";}
 
 								user.rateUser(currentUserId, idUserToBeRated, rating);
 							}
+
 						}
+						
 					}
 
 					// reset value and go back to main menu
@@ -388,14 +380,34 @@ public class main {
 				} 
 				else if (c == 3) // two degrees of separation
 				{
-					String user1;
-					String user2;
-					System.out.println("Please enter the first username:");
-					while((user1 = in.readLine()) == null && user1.length() == 0);
-					System.out.println("Please enter the second username:");
-					while((user2 = in.readLine()) == null && user2.length() == 0);
+					int firstUserId;
+					int secondUserId;
+					
+					System.out.println("The following are all the users of the system:");
+					System.out.println("Please select the ID of the first user:");
+					String line;
+					while((line =in.readLine())== null && line.length() == 0);
+					try{
+						firstUserId = Integer.parseInt(line);
+					}catch(Exception e){
+						System.out.println("Invalid ID");
+						c = 0;
+						break;
+					}
+					
+					System.out.println("Please select the ID of the second user:");
+					line = null;
+					while((line = in.readLine()) == null && line.length() == 0);
+					try{
+						secondUserId = Integer.parseInt(line);
+					}catch(Exception e){
+						System.out.println("Invalid ID");
+						c = 0;
+						break;
+					}
 					
 					//perform calculation
+					System.out.println(user.calculateDegreeOfSeparation(firstUserId, secondUserId));
 				} 
 				else if (c == 4) // statistics
 				{
@@ -467,6 +479,8 @@ public class main {
 				} 
 				else 
 				{
+					//TODO: show the summary of TH reservations and confirm
+					//TODO: then perform queries
 					System.out.println("EoM");
 					con.stmt.close();
 
