@@ -56,7 +56,7 @@ public class main {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		// TODO add functionality for numbers 9, 10, 11, 14
 
 		Connector con = null;
 		String choice;

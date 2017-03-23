@@ -20,6 +20,13 @@ public class User {
 		return -1;
 	}
 	
+	//checks whether the user is an admin
+	public boolean isAdmin(String username){
+		boolean result = false;
+		
+		return result;
+	}
+	
 	//test a password against a current username, if the username doesn't exist or if the password doesn't match return false
 	public boolean login(String username, String password){
 		boolean result = true;
