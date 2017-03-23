@@ -235,7 +235,6 @@ public class main {
 							if(th.checkTempHouseExists(nameOfTH) == false){
 								System.out.println("No temporary housing with that name could be found");
 								c = 0;
-								break;
 							}
 							else
 							{
@@ -285,7 +284,6 @@ public class main {
 							if(th.checkTempHouseExists(nameOfTH) == false){
 								System.out.println("No temporary housing with that name could be found");
 								c = 0;
-								break;
 							}
 							else
 							{
@@ -337,40 +335,47 @@ public class main {
 							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
 							
 							User user = new User();
-							System.out.println("These were the user(s) with the given name:");
-							System.out.println(user.showUsersWithName(nameUserToBeRated));
-							System.out.println("Please select the ID of the user you would like to rate:");
-							int idUserToBeRated;
-							String line;
-							while((line = in.readLine()) == null && line.length() == 0);
-							try{
-								idUserToBeRated = Integer.parseInt(line);
-							}catch(Exception e){
-								System.out.println(e.getMessage());
-								throw e;
-							}
+							String usersWithName = user.showUsersWithName(nameUserToBeRated);
 
-							int i = 0;
-							while(i != 1 && i != 2)
-							{
-								System.out.println("Please select the rating you would like to give this user:");
-								System.out.println("1. Trusted:");
-								System.out.println("2. Not-trusted:");
-								
-								String lineToBeParsed;
-								while((lineToBeParsed = in.readLine()) == null && lineToBeParsed.length() == 0);
+							if(usersWithName == ""){
+								System.out.println("There were no users with the given name:");
+							}
+							else{
+								System.out.println("These were the user(s) with the given name:");
+
+								System.out.println("Please select the ID of the user you would like to rate:");
+								int idUserToBeRated;
+								String line;
+								while((line = in.readLine()) == null && line.length() == 0);
 								try{
-									i = Integer.parseInt(lineToBeParsed);
-								}catch (Exception e){
-									continue;
+									idUserToBeRated = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									throw e;
 								}
-							}
-							
-							String rating = "";
-							if(i == 1) {rating = "Trusted";}
-							else if(i == 2) {rating = "Not-Trusted";}
 
-							user.rateUser(username, idUserToBeRated, rating);
+								int i = 0;
+								while(i != 1 && i != 2)
+								{
+									System.out.println("Please select the rating you would like to give this user:");
+									System.out.println("1. Trusted:");
+									System.out.println("2. Not-trusted:");
+									
+									String lineToBeParsed;
+									while((lineToBeParsed = in.readLine()) == null && lineToBeParsed.length() == 0);
+									try{
+										i = Integer.parseInt(lineToBeParsed);
+									}catch (Exception e){
+										continue;
+									}
+								}
+								
+								String rating = "";
+								if(i == 1) {rating = "Trusted";}
+								else if(i == 2) {rating = "Not-Trusted";}
+
+								user.rateUser(username, idUserToBeRated, rating);
+							}
 						}
 					}
 
