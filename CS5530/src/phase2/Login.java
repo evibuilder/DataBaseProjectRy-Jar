@@ -9,7 +9,7 @@ public class Login {
 	
 	//test a password against a current username, if the username doesn't exist or if the password doesn't match return false
 	public boolean login(String username, String password){
-		boolean result = false;
+		boolean result = true;
 		
 		return result;
 	}
