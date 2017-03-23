@@ -2,6 +2,9 @@ package phase2;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class main {
 
@@ -57,13 +60,7 @@ public class main {
 
 		Connector con = null;
 		String choice;
-		String cname;
-		String dname;
-		String username;
-		String password;
-		String name;
-		String address;
-		String phoneNumber;
+		String username = "";
 		String sql = null;
 		int c = 0;
 		try {
@@ -91,6 +88,8 @@ public class main {
 
 				if (c == 1) // login
 				{
+					String password;
+					
 					System.out.println("Username:");
 					while ((username = in.readLine()) == null && username.length() == 0);
 					System.out.println("Password:");
@@ -107,8 +106,7 @@ public class main {
 				else if (c == 2) // register
 				{
 					System.out.println("Please choose a username:");
-					while ((username = in.readLine()) == null && username.length() == 0)
-						;
+					while ((username = in.readLine()) == null && username.length() == 0);
 
 					Login log = new Login();
 					// check for uniqueness of username
@@ -121,6 +119,11 @@ public class main {
 					}
 					System.out.println(username + " is unique");
 
+					String password;
+					String name;
+					String address;
+					String phoneNumber;
+					
 					System.out.println("Please choose a password:");
 					while ((password = in.readLine()) == null && password.length() == 0);
 					System.out.println("Please enter your full name:");
@@ -188,7 +191,13 @@ public class main {
 						} 
 						else if (c == 5) // make favorite
 						{
-							System.out.println("make fav");
+							String nameOfTH;
+							
+							System.out.println("Please enter the name of your new favorite temporary housing:");
+							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
+							
+							TemporaryHousing th = new TemporaryHousing();
+							th.makeFavorite(username, nameOfTH);
 						} 
 						else if (c == 6) // browse TH
 						{
@@ -217,15 +226,151 @@ public class main {
 
 						if (c == 1) // record feedback
 						{
-							System.out.println("record feedback");
+							String nameOfTH;
+							System.out.println("Which temporary housing would you like to record feedback on?:");
+							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
+							
+							TemporaryHousing th = new TemporaryHousing();
+							
+							if(th.checkTempHouseExists(nameOfTH) == false){
+								System.out.println("No temporary housing with that name could be found");
+								c = 0;
+								break;
+							}
+							else
+							{
+								int score = -1;
+								String comments = "";
+								
+								System.out.println("Please enter a score between 0 and 10 (0= terrible, 10 = excellent):");
+								String line;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									score = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+
+								while(score < 0 || score > 10){
+									System.out.println("That was not a valid score");
+									System.out.println("Please enter a score between 0 and 10 (0= terrible, 10 = excellent):");
+									while((line = in.readLine()) == null && line.length() == 0);
+									try{
+										score = Integer.parseInt(line);
+									}catch(Exception e){
+										continue;
+									}
+								}
+								
+								System.out.println("Enter any comments (Enter to skip):");
+								while((comments = in.readLine()) == null);
+								
+								String date;
+								DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+								Date dateobj = new Date();
+								date = df.format(dateobj);
+								
+								Feedback feedback = new Feedback();
+								feedback.recordFeedback(username, nameOfTH, date, score, comments);
+							}
 						} 
 						else if (c == 2) // assess feedback
 						{
-							System.out.println("assess feedback");
+							String nameOfTH;
+							System.out.println("Which temporary housing would you like to assess feedback on?:");
+							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);	
+							
+							TemporaryHousing th = new TemporaryHousing();
+							
+							if(th.checkTempHouseExists(nameOfTH) == false){
+								System.out.println("No temporary housing with that name could be found");
+								c = 0;
+								break;
+							}
+							else
+							{
+								Feedback feedback = new Feedback();
+								
+								System.out.println(feedback.showFeedbackForTH(nameOfTH));
+								System.out.println("Using the feedback ID, which feedback would you like to assess?:");
+								int feedbackID;
+								String line;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									feedbackID = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									throw e;
+								}
+								
+								System.out.println("What rating would you like to give this feedback?:");
+								System.out.println("(0 = useless, 1 = useful, 2 = very useful)");
+								int rating = -1;
+								line = null;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									rating = Integer.parseInt(line);
+								} catch (Exception e){
+									continue;
+								}
+								
+								while(rating < 0 || rating > 3){
+									line = null;
+									System.out.println("That was not a valid rating, please try again:");
+									System.out.println("What rating would you like to give this feedback?:");
+									System.out.println("(0 = useless, 1 = useful, 2 = very useful)");
+									while((line = in.readLine()) == null && line.length() == 0);
+									try{
+										rating = Integer.parseInt(line);
+									} catch (Exception e){
+										continue;
+									}
+								}
+								
+								feedback.assessFeedback(username, feedbackID, rating);
+							}
 						} 
 						else if (c == 3) // rate user
 						{
-							System.out.println("rate user");
+							String nameUserToBeRated;
+							System.out.println("Which user would you like to rate?:");
+							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
+							
+							User user = new User();
+							System.out.println("These were the user(s) with the given name:");
+							System.out.println(user.showUsersWithName(nameUserToBeRated));
+							System.out.println("Please select the ID of the user you would like to rate:");
+							int idUserToBeRated;
+							String line;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								idUserToBeRated = Integer.parseInt(line);
+							}catch(Exception e){
+								System.out.println(e.getMessage());
+								throw e;
+							}
+
+							int i = 0;
+							while(i != 1 && i != 2)
+							{
+								System.out.println("Please select the rating you would like to give this user:");
+								System.out.println("1. Trusted:");
+								System.out.println("2. Not-trusted:");
+								
+								String lineToBeParsed;
+								while((lineToBeParsed = in.readLine()) == null && lineToBeParsed.length() == 0);
+								try{
+									i = Integer.parseInt(lineToBeParsed);
+								}catch (Exception e){
+									continue;
+								}
+							}
+							
+							String rating = "";
+							if(i == 1) {rating = "Trusted";}
+							else if(i == 2) {rating = "Not-Trusted";}
+
+							user.rateUser(username, idUserToBeRated, rating);
 						}
 					}
 
@@ -246,11 +391,10 @@ public class main {
 				else if (c == 4) // statistics
 				{
 					c = 0;
-					
+					int numResults;
 					while(c != 4){
 						displayStatisticsMenu();
-						while ((choice = in.readLine()) == null && choice.length() == 0)
-							;
+						while ((choice = in.readLine()) == null && choice.length() == 0);
 						try {
 							c = Integer.parseInt(choice);
 						} catch (Exception e) {
@@ -262,15 +406,50 @@ public class main {
 						
 						if (c == 1) // most popular TH
 						{
-							System.out.println("most popular TH");
+							System.out.println("How many results would you like to display?:");
+							String line;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								numResults = Integer.parseInt(line);
+							}catch (Exception e){
+								System.out.println(e.getMessage());
+								throw e;
+							}
+
+							Statistics stat = new Statistics();
+							System.out.println(stat.mostPopularTH(numResults));
 						} 
 						else if (c == 2) // most expensive TH
 						{
-							System.out.println("most expensive TH");
+							System.out.println("How many results would you like to display?:");
+							String line;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								numResults = Integer.parseInt(line);
+							}catch (Exception e){
+								System.out.println(e.getMessage());
+								throw e;
+							}
+
+							
+							Statistics stat = new Statistics();
+							System.out.println(stat.mostExpensiveTH(numResults));
 						} 
 						else if (c == 3) // most highly rated PH
 						{
-							System.out.println("most highly rated PH");
+							System.out.println("How many results would you like to display?:");
+							String line;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								numResults = Integer.parseInt(line);
+							}catch (Exception e){
+								System.out.println(e.getMessage());
+								throw e;
+							}
+
+							
+							Statistics stat = new Statistics();
+							System.out.println(stat.mostHighlyRatedPH(numResults));
 						}
 					}
 					
