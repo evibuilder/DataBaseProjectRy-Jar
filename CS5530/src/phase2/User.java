@@ -14,4 +14,24 @@ public class User {
 	public void rateUser(String nameUserDoingRating, int idOfUserGettingRated, String rating){
 		
 	}
+	
+	//test a password against a current username, if the username doesn't exist or if the password doesn't match return false
+	public boolean login(String username, String password){
+		boolean result = true;
+		
+		return result;
+	}
+	
+	//try to add a new user to the system
+	public boolean registerNewUser(String username, String password, String name, String address, String phoneNumber){
+		boolean result = false;
+		
+		return result; 
+	}
+	
+	public boolean checkForUsernameUniqueness(String username){
+		boolean result = false;
+		
+		return result;
+	}
 }

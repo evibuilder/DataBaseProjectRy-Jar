@@ -95,8 +95,8 @@ public class main {
 					System.out.println("Password:");
 					while ((password = in.readLine()) == null && password.length() == 0);
 
-					Login log = new Login();
-					if (log.login(username, password) == false) {
+					User user = new User();
+					if (user.login(username, password) == false) {
 						System.out.println("The username or password is incorrect");
 						c = 0;
 					}else{
@@ -108,9 +108,9 @@ public class main {
 					System.out.println("Please choose a username:");
 					while ((username = in.readLine()) == null && username.length() == 0);
 
-					Login log = new Login();
+					User user = new User();
 					// check for uniqueness of username
-					while (log.checkForUsernameUniqueness(username) == false) {
+					while (user.checkForUsernameUniqueness(username) == false) {
 
 						System.out.println(
 								"The username " + username + " is already taken, please choose another username:");
@@ -133,7 +133,7 @@ public class main {
 					System.out.println("Please enter your phone number:");
 					while ((phoneNumber = in.readLine()) == null && phoneNumber.length() == 0);
 
-					if (log.registerNewUser(username, password, name, address, phoneNumber) == true) {
+					if (user.registerNewUser(username, password, name, address, phoneNumber) == true) {
 						System.out.println(username + " was successfully added to the system");
 					} else {
 						System.out
