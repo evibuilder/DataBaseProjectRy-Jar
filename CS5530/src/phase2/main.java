@@ -180,6 +180,7 @@ public class main {
 							continue;
 						if (c == 1) // reserve TH
 						{
+							//TODO: reserve TH
 							System.out.println("reserve TH");
 						} 
 						else if (c == 2) // record new PH
@@ -202,15 +203,66 @@ public class main {
 							System.out.println("Year built:");
 							while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
 							
-							TemporaryHousing th = new TemporaryHousing();
+							Housing th = new Housing();
 							th.addNewPH(name, address, url, yearBuilt);
 						} 
 						else if (c == 3) // update existing PH
 						{
-							System.out.println("update PH");
-						} 
+							String nameOfPH;
+							System.out.println("Please enter the name of the permanent housing you would like to update:");
+
+							while((nameOfPH = in.readLine()) == null && nameOfPH.length() == 0);
+							
+							Housing housing = new Housing();
+							String results = housing.showIDsFromGivenName(nameOfPH);
+							
+							if(results.equals("")){
+								System.out.println("No housing was found with that name");
+								c = 0;
+							}
+							else
+							{
+								System.out.println("The following permanent housing were found");
+								System.out.println(results);
+								System.out.println("Please select the ID of the permanent house you would like to update:");
+								String line;
+								int idOfPh;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									idOfPh = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									continue;
+								}
+								
+								System.out.println("\tCurrent information");
+								System.out.println(housing.displayPHinformation(idOfPh));
+								System.out.println();
+								System.out.println("Please enter updated information");
+								
+								String name;
+								String address;
+								String url;
+								String yearBuilt;
+								
+								System.out.println("Name:");
+								while((name = in.readLine()) == null && name.length() == 0);
+								
+								System.out.println("Address:");
+								while((address = in.readLine()) == null && address.length() == 0);
+								
+								System.out.println("URL:");
+								while((url = in.readLine()) == null && url.length() == 0);
+								
+								System.out.println("Year built:");
+								while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
+								
+								housing.updateCurrentPH(idOfPh, name, address, url, yearBuilt);
+							}
+						}
 						else if (c == 4) // record stay
 						{
+							//TODO: record stay
 							System.out.println("record stay");
 						} 
 						else if (c == 5) // make favorite
@@ -220,7 +272,7 @@ public class main {
 							System.out.println("Please enter the name of your new favorite temporary housing:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
-							TemporaryHousing th = new TemporaryHousing();
+							Housing th = new Housing();
 							th.makeFavorite(username, nameOfTH);
 						} 
 						else if (c == 6) // browse TH
@@ -254,7 +306,7 @@ public class main {
 							System.out.println("Which temporary housing would you like to record feedback on?:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
-							TemporaryHousing th = new TemporaryHousing();
+							Housing th = new Housing();
 							
 							if(th.checkTempHouseExists(nameOfTH) == false){
 								System.out.println("No temporary housing with that name could be found");
@@ -303,7 +355,7 @@ public class main {
 							System.out.println("Which temporary housing would you like to assess feedback on?:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);	
 							
-							TemporaryHousing th = new TemporaryHousing();
+							Housing th = new Housing();
 							
 							if(th.checkTempHouseExists(nameOfTH) == false){
 								System.out.println("No temporary housing with that name could be found");
