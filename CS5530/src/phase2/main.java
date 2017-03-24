@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class main {
 
@@ -63,6 +65,10 @@ public class main {
 	public static String displayReservations(){
 		return null;
 	}
+	
+	public static String displayStays(){
+		return null;
+	}
 
 	public static void main(String[] args) {
 		// TODO add functionality for numbers 9, 10, 11, 14
@@ -74,7 +80,8 @@ public class main {
 		int currentUserId;
 		int c = 0;
 		
-		List<Integer> reservations = new ArrayList<Integer>(); 
+		Set<Integer> reservations = new TreeSet<Integer>(); 
+		Set<Integer> stays = new TreeSet<Integer>();
 		
 		try {
 			// remember to replace the password
@@ -307,8 +314,24 @@ public class main {
 						}
 						else if (c == 4) // record stay
 						{
-							//TODO: record stay
-							System.out.println("record stay");
+							System.out.println("Here is a list of your reservations:");
+							Housing th = new Housing();
+							System.out.println(th.displayReservation(currentUserId));
+							
+							System.out.println("Please select the id of the reservation you would like to record a stay:");
+							String line;
+							while (( line = in.readLine()) == null && line.length() == 0);
+							int reservationID;
+							try{
+								reservationID = Integer.parseInt(line);
+							}catch(Exception e){
+								System.out.println(e.getMessage());
+								c = 0;
+								continue;
+							}
+							
+							stays.add(reservationID);
+							System.out.println("That stay was added to your cart");
 						} 
 						else if (c == 5) // make favorite
 						{
@@ -318,7 +341,29 @@ public class main {
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
 							Housing th = new Housing();
-							th.makeFavorite(username, nameOfTH);
+							String results = th.showIDsFromGivenName(nameOfTH);
+							
+							if(results.equals("")){
+								System.out.println("No housing was found with that name");
+								c = 0;
+							}
+							else
+							{
+								System.out.println("The following permanent housing were found");
+								System.out.println(results);
+								System.out.println("Please select the ID of the permanent house you would like to update:");
+								String line;
+								int idOfTh;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									idOfTh = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									continue;
+								}
+								
+								th.makeFavorite(currentUserId, idOfTh);
+							}
 						} 
 						else if (c == 6) // browse TH
 						{
@@ -634,7 +679,7 @@ public class main {
 				}
 				else 
 				{
-					System.out.println("Please review and confirm the following reservations you made");
+					System.out.println("Please review and confirm the following reservations:");
 					System.out.println(displayReservations());
 					int i = 0;
 					
@@ -651,12 +696,30 @@ public class main {
 					Housing th = new Housing();
 					
 					if(i == 1){
-						for(int j = 0; j < reservations.size(); j++){
-							th.makeReservation(currentUserId, reservations.get(j));
+						for (int item : reservations){
+							th.makeReservation(currentUserId, item);
 						}
+						System.out.println("Reservations were recorded:");
 					}
 					
-					//TODO: checkout stays
+					System.out.println("Please review and confirm the following stays:");
+					System.out.println(displayStays());
+					System.out.println("1. Confirm stays:");
+					System.out.println("2. Cancel stays:");
+					answer = null;
+					while ((answer = in.readLine()) == null && answer.length() == 0);
+					try{
+						i = Integer.parseInt(answer);
+					}catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+					
+					if(i == 1){
+						for (int item : stays){
+							th.recordStay(currentUserId, item);
+						}
+						System.out.println("Stays were recorded:");
+					}
 					
 					con.stmt.close();
 

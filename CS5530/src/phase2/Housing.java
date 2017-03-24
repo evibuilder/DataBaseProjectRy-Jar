@@ -5,7 +5,7 @@ public class Housing {
 	public Housing(){}
 	
 	//for the given user, make the TH their favorite
-	public void makeFavorite(String username, String nameOfTH){
+	public void makeFavorite(int userID, int idOfTH){
 		
 	}
 	
@@ -37,6 +37,16 @@ public class Housing {
 	
 	//makes a reservation given a userid and temp housing id
 	public void makeReservation(int userID, int housingID){
+		
+	}
+	
+	//returns a string that displays all reservations for the given user id
+	public String displayReservation(int userID){
+		return null;
+	}
+	
+	//records a stay with the following reservationID information
+	public void recordStay(int userID, int reservationID){
 		
 	}
 }
