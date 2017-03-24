@@ -1,19 +1,22 @@
 package phase2;
 
-public class Pair {
+public class Tuple {
 	
 	private int first;
 	private int second; 
+	private int third;
 	
-	public Pair(){
+	public Tuple(){
 		first = 0;
 		second = 0;
+		third = 0;
 	}
 	
-	public Pair(int first, int second)
+	public Tuple(int first, int second, int third)
 	{
 		this.first = first;
 		this.second = second;
+		this.third = third;
 	}
 	
 	public void setFirst(int first){
@@ -24,11 +27,19 @@ public class Pair {
 		this.second = second; 
 	}
 	
-	public int getFirst(){
+	public void setThird(int third){
+		this.third = third;
+	}
+	
+	public int first(){
 		return first;
 	}
 	
-	public int getSecond(){
+	public int second(){
 		return second;
+	}
+	
+	public int third(){
+		return third;
 	}
 }

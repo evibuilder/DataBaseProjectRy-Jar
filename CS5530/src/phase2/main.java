@@ -79,8 +79,8 @@ public class main {
 		String sql = null;
 		int currentUserId;
 		int c = 0;
-		
-		Set<Integer> reservations = new TreeSet<Integer>(); 
+ 
+		Set<Tuple> reservations = new TreeSet<Tuple>(); 
 		Set<Integer> stays = new TreeSet<Integer>();
 		
 		try {
@@ -228,11 +228,34 @@ public class main {
 									continue;
 								}
 								
-								reservations.add(idOfTH);
-								System.out.println("The reservation was added to your cart");
-								
-								System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
-								System.out.println(th.getSuggestedReservations(idOfTH));
+								if(th.checkHousingExists(idOfTH) == false){
+									System.out.println("That was not a valid temporary housing ID:");
+									c = 0;
+									continue;
+								}
+								else
+								{
+									System.out.println("These are the available reservation peroids for this temporary housing:");
+									System.out.println(th.showAvailablePeriods(idOfTH));
+									System.out.println("Please select the ID of the period for which you would like to reserve:");
+									line = null;
+									while ((line = in.readLine()) == null && line.length() == 0);
+									int periodID;
+									try{
+										periodID = Integer.parseInt(line);
+									}catch(Exception e){
+										System.out.println(e.getMessage());
+										c = 0;
+										continue;
+									}
+									Tuple newReservation = new Tuple(currentUserId, idOfTH, periodID);
+									reservations.add(newReservation);
+
+									System.out.println("The reservation was added to your cart");
+									
+									System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
+									System.out.println(th.getSuggestedReservations(idOfTH));
+								}
 							}
 						} 
 						else if (c == 2) // record new PH
@@ -330,8 +353,13 @@ public class main {
 								continue;
 							}
 							
-							stays.add(reservationID);
-							System.out.println("That stay was added to your cart");
+							if(th.checkForReservation(currentUserId, reservationID)){
+								stays.add(reservationID);
+								System.out.println("That stay was added to your cart:");
+							}else{
+								System.out.println("That was not a valid reservation ID:");
+								c = 0;
+							}
 						} 
 						else if (c == 5) // make favorite
 						{
@@ -696,10 +724,12 @@ public class main {
 					Housing th = new Housing();
 					
 					if(i == 1){
-						for (int item : reservations){
+						/*for (int item : reservations){
 							th.makeReservation(currentUserId, item);
-						}
+						}*/
 						System.out.println("Reservations were recorded:");
+					}else{
+						System.out.println("Reservations were discarded:");
 					}
 					
 					System.out.println("Please review and confirm the following stays:");
@@ -719,6 +749,9 @@ public class main {
 							th.recordStay(currentUserId, item);
 						}
 						System.out.println("Stays were recorded:");
+					}
+					else{
+						System.out.println("Stays were discarded:");
 					}
 					
 					con.stmt.close();
