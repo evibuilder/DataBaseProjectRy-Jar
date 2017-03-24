@@ -6,7 +6,7 @@ public class Feedback {
 	
 	
 	// records the score and comments for the given TH from the given user
-	public void recordFeedback(String username, String nameOfTH, String date, int score, String comments){
+	public void recordFeedback(String username, int idOfTH, String date, int score, String comments){
 		
 	}
 	
@@ -16,7 +16,7 @@ public class Feedback {
 	}
 	
 	//returns a list of the feedback for a given TH
-	public String showFeedbackForTH(String nameOfTH){
+	public String showFeedbackForTH(int idOfTH){
 		return null;
 	}
 }

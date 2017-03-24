@@ -59,6 +59,10 @@ public class main {
 		System.out.println("4. Back to main menu:");
 		System.out.println("please enter your choice:");
 	}
+	
+	public static String displayReservations(){
+		return null;
+	}
 
 	public static void main(String[] args) {
 		// TODO add functionality for numbers 9, 10, 11, 14
@@ -70,7 +74,7 @@ public class main {
 		int currentUserId;
 		int c = 0;
 		
-		List<Pair> reservations = new ArrayList<Pair>(); 
+		List<Integer> reservations = new ArrayList<Integer>(); 
 		
 		try {
 			// remember to replace the password
@@ -217,8 +221,7 @@ public class main {
 									continue;
 								}
 								
-								Pair newReservation = new Pair(currentUserId, idOfTH); 
-								reservations.add(newReservation);
+								reservations.add(idOfTH);
 								System.out.println("The reservation was added to your cart");
 								
 								System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
@@ -349,18 +352,32 @@ public class main {
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
 							Housing th = new Housing();
+							String results = th.showIDsFromGivenName(nameOfTH);
 							
-							if(th.checkTempHouseExists(nameOfTH) == false){
+							if(results.equals("")){
 								System.out.println("No temporary housing with that name could be found");
 								c = 0;
 							}
 							else
 							{
+								System.out.println("The following temporary housing were found");
+								System.out.println(results);
+								System.out.println("Please select the ID of the temporary housing you would like to give feedback on:");
+								String line;
+								int idOfTH;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									idOfTH = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									continue;
+								}
+								
 								int score = -1;
 								String comments = "";
 								
 								System.out.println("Please enter a score between 0 and 10 (0= terrible, 10 = excellent):");
-								String line;
+								line = null;
 								while((line = in.readLine()) == null && line.length() == 0);
 								try{
 									score = Integer.parseInt(line);
@@ -388,7 +405,7 @@ public class main {
 								date = df.format(dateobj);
 								
 								Feedback feedback = new Feedback();
-								feedback.recordFeedback(username, nameOfTH, date, score, comments);
+								feedback.recordFeedback(username, idOfTH, date, score, comments);
 							}
 						} 
 						else if (c == 2) // assess feedback
@@ -398,19 +415,33 @@ public class main {
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);	
 							
 							Housing th = new Housing();
+							String results = th.showIDsFromGivenName(nameOfTH);
 							
-							if(th.checkTempHouseExists(nameOfTH) == false){
+							if(results.equals("")){
 								System.out.println("No temporary housing with that name could be found");
 								c = 0;
 							}
 							else
 							{
+								System.out.println("The following temporary housing were found");
+								System.out.println(results);
+								System.out.println("Please select the ID of the temporary housing you would like to give feedback on:");
+								String line;
+								int idOfTH;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									idOfTH = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									continue;
+								}
+								
 								Feedback feedback = new Feedback();
 								
-								System.out.println(feedback.showFeedbackForTH(nameOfTH));
+								System.out.println(feedback.showFeedbackForTH(idOfTH));
 								System.out.println("Using the feedback ID, which feedback would you like to assess?:");
 								int feedbackID;
-								String line;
+								line = null;
 								while((line = in.readLine()) == null && line.length() == 0);
 								try{
 									feedbackID = Integer.parseInt(line);
@@ -603,9 +634,30 @@ public class main {
 				}
 				else 
 				{
-					//TODO: show the summary of TH reservations and confirm
-					//TODO: then perform queries
-					System.out.println("EoM");
+					System.out.println("Please review and confirm the following reservations you made");
+					System.out.println(displayReservations());
+					int i = 0;
+					
+					System.out.println("1. Confirm reservations:");
+					System.out.println("2. Cancel reservations:");
+					String answer;
+					while ((answer = in.readLine()) == null && answer.length() == 0);
+					try{
+						i = Integer.parseInt(answer);
+					}catch(Exception e){
+						System.out.println(e.getMessage());
+					}
+					
+					Housing th = new Housing();
+					
+					if(i == 1){
+						for(int j = 0; j < reservations.size(); j++){
+							th.makeReservation(currentUserId, reservations.get(j));
+						}
+					}
+					
+					//TODO: checkout stays
+					
 					con.stmt.close();
 
 					break;

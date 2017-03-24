@@ -9,12 +9,6 @@ public class Housing {
 		
 	}
 	
-	//given a name of TH, check whether it exists
-	public boolean checkTempHouseExists(String nameOfTH){
-		boolean result = false;
-		return result;
-	}
-	
 	//adds a new PH to the system
 	public void addNewPH(String name, String address, String url, String yearBuilt){
 		
@@ -39,5 +33,10 @@ public class Housing {
 	//returns a string that lists suggestions based on what user reserved, see number 11) in project outline
 	public String getSuggestedReservations(int id){
 		return null;
+	}
+	
+	//makes a reservation given a userid and temp housing id
+	public void makeReservation(int userID, int housingID){
+		
 	}
 }
