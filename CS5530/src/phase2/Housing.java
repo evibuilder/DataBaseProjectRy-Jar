@@ -35,4 +35,9 @@ public class Housing {
 	public String displayPHinformation(int id){
 		return null;
 	}
+	
+	//returns a string that lists suggestions based on what user reserved, see number 11) in project outline
+	public String getSuggestedReservations(int id){
+		return null;
+	}
 }

@@ -1,10 +1,14 @@
 package phase2;
 
 import java.io.BufferedReader;
+
+import javafx.util.*;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class main {
 
@@ -65,6 +69,9 @@ public class main {
 		String sql = null;
 		int currentUserId;
 		int c = 0;
+		
+		List<Pair> reservations = new ArrayList<Pair>(); 
+		
 		try {
 			// remember to replace the password
 			System.out.println("Attemping to connect to database...");
@@ -122,25 +129,28 @@ public class main {
 					System.out.println(username + " is unique");
 
 					String password;
-					String name;
+					String firstName;
+					String lastName;
 					String address;
 					String phoneNumber;
 					
 					System.out.println("Please choose a password:");
 					while ((password = in.readLine()) == null && password.length() == 0);
-					System.out.println("Please enter your full name:");
-					while ((name = in.readLine()) == null && name.length() == 0);
+					System.out.println("Please enter your first name:");
+					while ((firstName = in.readLine()) == null && firstName.length() == 0);
+					System.out.println("Please enter your last name:");
+					while ((lastName = in.readLine()) == null && lastName.length() == 0);
 					System.out.println("Please enter your address:");
 					while ((address = in.readLine()) == null && address.length() == 0);
 					System.out.println("Please enter your phone number:");
 					while ((phoneNumber = in.readLine()) == null && phoneNumber.length() == 0);
 
-					if (user.registerNewUser(username, password, name, address, phoneNumber) == true) {
+					if (user.registerNewUser(username, password, firstName, lastName, address, phoneNumber) == true) {
 						System.out.println(username + " was successfully added to the system");
 					} else {
 						System.out
 								.println("There was an error adding " + username + " to the system, please try again");
-						username = password = name = address = phoneNumber = null;
+						username = password = firstName = lastName = address = phoneNumber = null;
 						c = 0;
 					}
 				}
@@ -181,8 +191,39 @@ public class main {
 							continue;
 						if (c == 1) // reserve TH
 						{
-							//TODO: reserve TH
-							System.out.println("reserve TH");
+							String nameOfTH;
+							System.out.println("Which temporary housing would you like to reserve?:");
+							while ((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
+							
+							Housing th = new Housing();
+							String results = th.showIDsFromGivenName(nameOfTH);
+							
+							if(results.equals("")){
+								System.out.println("No housing was found with that name");
+								c = 0;
+							}
+							else
+							{
+								System.out.println("The following temporary housing were found");
+								System.out.println(results);
+								System.out.println("Please select the ID of the temporary housing you would like to reserve:");
+								String line;
+								int idOfTH;
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									idOfTH = Integer.parseInt(line);
+								}catch(Exception e){
+									System.out.println(e.getMessage());
+									continue;
+								}
+								
+								Pair newReservation = new Pair(currentUserId, idOfTH); 
+								reservations.add(newReservation);
+								System.out.println("The reservation was added to your cart");
+								
+								System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
+								System.out.println(th.getSuggestedReservations(idOfTH));
+							}
 						} 
 						else if (c == 2) // record new PH
 						{

@@ -35,7 +35,7 @@ public class User {
 	}
 	
 	//try to add a new user to the system
-	public boolean registerNewUser(String username, String password, String name, String address, String phoneNumber){
+	public boolean registerNewUser(String username, String password, String firstName, String lastName, String address, String phoneNumber){
 		boolean result = false;
 		
 		return result; 
