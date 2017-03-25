@@ -57,6 +57,7 @@ public class Users {
 		 	{
 		 		System.out.println("cannot execute the query");
 		 		System.out.println("error code: " + e.getSQLState());
+		 		System.err.println(e.getMessage());
 		 	}
 		 	finally
 		 	{
