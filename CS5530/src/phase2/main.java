@@ -80,8 +80,16 @@ public class main {
 		int currentUserId;
 		int c = 0;
  
-		Set<Tuple> reservations = new TreeSet<Tuple>(); 
-		Set<Integer> stays = new TreeSet<Integer>();
+		Set<Tuple> reservationsInCart = new TreeSet<Tuple>(); 
+		Set<Integer> staysInCart = new TreeSet<Integer>();
+		
+		Housing housing = new Housing();
+		Statistics stats = new Statistics();
+		Users user = new Users();
+		Reservations reservations = new Reservations();
+		Feedback feedback = new Feedback();
+		Keywords keywords = new Keywords();
+		Period period = new Period();
 		
 		try {
 			// remember to replace the password
@@ -115,7 +123,6 @@ public class main {
 					System.out.println("Password:");
 					while ((password = in.readLine()) == null && password.length() == 0);
 
-					User user = new User();
 					if (user.login(username, password) == false) {
 						System.out.println("The username or password is incorrect");
 						c = 0;
@@ -128,7 +135,6 @@ public class main {
 					System.out.println("Please choose a username:");
 					while ((username = in.readLine()) == null && username.length() == 0);
 
-					User user = new User();
 					// check for uniqueness of username
 					while (user.checkForUsernameUniqueness(username) == false) {
 
@@ -171,7 +177,6 @@ public class main {
 			c = 0;
 			
 			//get current user id
-			User user = new User();
 			currentUserId = user.userIdFromName(username);
 
 			// main menu
@@ -206,8 +211,7 @@ public class main {
 							System.out.println("Which temporary housing would you like to reserve?:");
 							while ((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
-							Housing th = new Housing();
-							String results = th.showIDsFromGivenName(nameOfTH);
+							String results = housing.showIDsFromGivenName(nameOfTH);
 							
 							if(results.equals("")){
 								System.out.println("No housing was found with that name");
@@ -228,7 +232,7 @@ public class main {
 									continue;
 								}
 								
-								if(th.checkHousingExists(idOfTH) == false){
+								if(housing.checkHousingExists(idOfTH) == false){
 									System.out.println("That was not a valid temporary housing ID:");
 									c = 0;
 									continue;
@@ -236,7 +240,7 @@ public class main {
 								else
 								{
 									System.out.println("These are the available reservation peroids for this temporary housing:");
-									System.out.println(th.showAvailablePeriods(idOfTH));
+									System.out.println(period.showAvailablePeriods(idOfTH));
 									System.out.println("Please select the ID of the period for which you would like to reserve:");
 									line = null;
 									while ((line = in.readLine()) == null && line.length() == 0);
@@ -249,12 +253,12 @@ public class main {
 										continue;
 									}
 									Tuple newReservation = new Tuple(currentUserId, idOfTH, periodID);
-									reservations.add(newReservation);
+									reservationsInCart.add(newReservation);
 
 									System.out.println("The reservation was added to your cart");
 									
 									System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
-									System.out.println(th.getSuggestedReservations(idOfTH));
+									System.out.println(reservations.getSuggestedReservations(idOfTH));
 								}
 							}
 						} 
@@ -278,8 +282,8 @@ public class main {
 							System.out.println("Year built:");
 							while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
 							
-							Housing th = new Housing();
-							th.addNewPH(name, address, url, yearBuilt);
+							housing.addNewPH(name, address, url, yearBuilt);
+							System.out.println(name + " was added to the system:");
 						} 
 						else if (c == 3) // update existing PH
 						{
@@ -288,7 +292,6 @@ public class main {
 
 							while((nameOfPH = in.readLine()) == null && nameOfPH.length() == 0);
 							
-							Housing housing = new Housing();
 							String results = housing.showIDsFromGivenName(nameOfPH);
 							
 							if(results.equals("")){
@@ -310,36 +313,42 @@ public class main {
 									continue;
 								}
 								
-								System.out.println("\tCurrent information");
-								System.out.println(housing.displayPHinformation(idOfPh));
-								System.out.println();
-								System.out.println("Please enter updated information");
+								if(housing.checkHousingExists(idOfPh)){
 								
-								String name;
-								String address;
-								String url;
-								String yearBuilt;
-								
-								System.out.println("Name:");
-								while((name = in.readLine()) == null && name.length() == 0);
-								
-								System.out.println("Address:");
-								while((address = in.readLine()) == null && address.length() == 0);
-								
-								System.out.println("URL:");
-								while((url = in.readLine()) == null && url.length() == 0);
-								
-								System.out.println("Year built:");
-								while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
-								
-								housing.updateCurrentPH(idOfPh, name, address, url, yearBuilt);
+									System.out.println("\tCurrent information");
+									System.out.println(housing.displayPHinformation(idOfPh));
+									System.out.println();
+									System.out.println("Please enter updated information");
+									
+									String name;
+									String address;
+									String url;
+									String yearBuilt;
+									
+									System.out.println("Name:");
+									while((name = in.readLine()) == null && name.length() == 0);
+									
+									System.out.println("Address:");
+									while((address = in.readLine()) == null && address.length() == 0);
+									
+									System.out.println("URL:");
+									while((url = in.readLine()) == null && url.length() == 0);
+									
+									System.out.println("Year built:");
+									while((yearBuilt = in.readLine()) == null && yearBuilt.length() == 0);
+									
+									housing.updateCurrentPH(idOfPh, name, address, url, yearBuilt);
+								}
+								else{
+									System.out.println("That was not a valid ID:");
+								}
 							}
 						}
 						else if (c == 4) // record stay
 						{
 							System.out.println("Here is a list of your reservations:");
-							Housing th = new Housing();
-							System.out.println(th.displayReservation(currentUserId));
+
+							System.out.println(reservations.displayReservation(currentUserId));
 							
 							System.out.println("Please select the id of the reservation you would like to record a stay:");
 							String line;
@@ -353,8 +362,8 @@ public class main {
 								continue;
 							}
 							
-							if(th.checkForReservation(currentUserId, reservationID)){
-								stays.add(reservationID);
+							if(reservations.checkForReservation(currentUserId, reservationID)){
+								staysInCart.add(reservationID);
 								System.out.println("That stay was added to your cart:");
 							}else{
 								System.out.println("That was not a valid reservation ID:");
@@ -368,8 +377,7 @@ public class main {
 							System.out.println("Please enter the name of your new favorite temporary housing:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
-							Housing th = new Housing();
-							String results = th.showIDsFromGivenName(nameOfTH);
+							String results = housing.showIDsFromGivenName(nameOfTH);
 							
 							if(results.equals("")){
 								System.out.println("No housing was found with that name");
@@ -390,7 +398,13 @@ public class main {
 									continue;
 								}
 								
-								th.makeFavorite(currentUserId, idOfTh);
+								if(housing.checkHousingExists(idOfTh)){
+									user.makeHousingFavorite(currentUserId, idOfTh);
+								}
+								else{
+									System.out.println("That was not a valid ID");
+								}
+
 							}
 						} 
 						else if (c == 6) // browse TH
@@ -424,8 +438,7 @@ public class main {
 							System.out.println("Which temporary housing would you like to record feedback on?:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
 							
-							Housing th = new Housing();
-							String results = th.showIDsFromGivenName(nameOfTH);
+							String results = housing.showIDsFromGivenName(nameOfTH);
 							
 							if(results.equals("")){
 								System.out.println("No temporary housing with that name could be found");
@@ -477,7 +490,6 @@ public class main {
 								Date dateobj = new Date();
 								date = df.format(dateobj);
 								
-								Feedback feedback = new Feedback();
 								feedback.recordFeedback(username, idOfTH, date, score, comments);
 							}
 						} 
@@ -487,8 +499,7 @@ public class main {
 							System.out.println("Which temporary housing would you like to assess feedback on?:");
 							while((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);	
 							
-							Housing th = new Housing();
-							String results = th.showIDsFromGivenName(nameOfTH);
+							String results = housing.showIDsFromGivenName(nameOfTH);
 							
 							if(results.equals("")){
 								System.out.println("No temporary housing with that name could be found");
@@ -509,7 +520,6 @@ public class main {
 									continue;
 								}
 								
-								Feedback feedback = new Feedback();
 								
 								System.out.println(feedback.showFeedbackForTH(idOfTH));
 								System.out.println("Using the feedback ID, which feedback would you like to assess?:");
@@ -654,8 +664,7 @@ public class main {
 								throw e;
 							}
 
-							Statistics stat = new Statistics();
-							System.out.println(stat.mostPopularTH(numResults));
+							System.out.println(stats.mostPopularTH(numResults));
 						} 
 						else if (c == 2) // most expensive TH
 						{
@@ -670,8 +679,7 @@ public class main {
 							}
 
 							
-							Statistics stat = new Statistics();
-							System.out.println(stat.mostExpensiveTH(numResults));
+							System.out.println(stats.mostExpensiveTH(numResults));
 						} 
 						else if (c == 3) // most highly rated PH
 						{
@@ -686,8 +694,7 @@ public class main {
 							}
 
 							
-							Statistics stat = new Statistics();
-							System.out.println(stat.mostHighlyRatedPH(numResults));
+							System.out.println(stats.mostHighlyRatedPH(numResults));
 						}
 					}
 					
@@ -721,7 +728,6 @@ public class main {
 						System.out.println(e.getMessage());
 					}
 					
-					Housing th = new Housing();
 					
 					if(i == 1){
 						/*for (int item : reservations){
@@ -745,8 +751,8 @@ public class main {
 					}
 					
 					if(i == 1){
-						for (int item : stays){
-							th.recordStay(currentUserId, item);
+						for (int item : staysInCart){
+							reservations.recordStay(currentUserId, item);
 						}
 						System.out.println("Stays were recorded:");
 					}

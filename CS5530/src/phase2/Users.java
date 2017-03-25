@@ -1,8 +1,8 @@
 package phase2;
 
-public class User {
+public class Users {
 
-	public User(){}
+	public Users(){}
 	
 	
 	// returns a string containing names and ids of all users
@@ -51,5 +51,10 @@ public class User {
 	public String calculateDegreeOfSeparation(int firstUserId, int secondUserId){
 		
 		return null;
+	}
+	
+	//for the given user, make the TH their favorite
+	public void makeHousingFavorite(int userID, int idOfTH){
+		
 	}
 }

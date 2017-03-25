@@ -18,6 +18,4 @@ public class Statistics {
 	public String mostHighlyRatedPH(int numberOfResults){
 		return null;
 	}
-	
-	
 }
