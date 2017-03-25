@@ -11,7 +11,7 @@ public class Reservations {
 	}
 	
 	//makes a reservation given a userid and temp housing id
-	public void makeReservation(String username, int housingID, Statement stmt){
+	public void makeReservation(String username, int housingID, int periodID, Statement stmt){
 		
 	}
 	

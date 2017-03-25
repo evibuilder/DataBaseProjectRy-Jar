@@ -84,7 +84,7 @@ public class main {
 		String sql = null;
 		int c = 0;
  
-		Set<Tuple> reservationsInCart = new TreeSet<Tuple>(); 
+		Set<Pair> reservationsInCart = new TreeSet<Pair>(); 
 		Set<Integer> staysInCart = new TreeSet<Integer>();
 		
 		Housing housing = new Housing();
@@ -253,7 +253,7 @@ public class main {
 										c = 0;
 										continue;
 									}
-									Tuple newReservation = new Tuple(username, idOfTH, periodID);
+									Pair newReservation = new Pair(idOfTH, periodID);
 									reservationsInCart.add(newReservation);
 
 									System.out.println("The reservation was added to your cart");
@@ -719,9 +719,9 @@ public class main {
 					
 					
 					if(i == 1){
-						/*for (int item : reservations){
-							th.makeReservation(currentUserId, item);
-						}*/
+						for(Pair pair : reservationsInCart){
+							reservations.makeReservation(username, pair.first(), pair.second(), con.stmt);
+						}
 						System.out.println("Reservations were recorded:");
 					}else{
 						System.out.println("Reservations were discarded:");
