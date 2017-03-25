@@ -1,22 +1,24 @@
 package phase2;
 
+import java.sql.Statement;
+
 public class Feedback {
 
 	public Feedback(){}
 	
 	
 	// records the score and comments for the given TH from the given user
-	public void recordFeedback(String username, int idOfTH, String date, int score, String comments){
+	public void recordFeedback(String username, int idOfTH, String date, int score, String comments, Statement stmt){
 		
 	}
 	
 	// rates the feedback from the given user, with a rating of 0,1, or 2
-	public void assessFeedback(String username, int feedbackID, int rating){
+	public void assessFeedback(String username, int feedbackID, int rating, Statement stmt){
 		
 	}
 	
 	//returns a list of the feedback for a given TH
-	public String showFeedbackForTH(int idOfTH){
+	public String showFeedbackForTH(int idOfTH, Statement stmt){
 		return null;
 	}
 }
