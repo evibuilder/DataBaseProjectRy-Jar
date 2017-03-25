@@ -138,7 +138,7 @@ public class main {
 				{
 					System.out.println("Please choose a username:");
 					while ((username = in.readLine()) == null && username.length() == 0);
-
+					/*
 					// check for uniqueness of username
 					while (user.checkForUsernameUniqueness(username, con.stmt) == false) {
 
@@ -148,7 +148,7 @@ public class main {
 						while ((username = in.readLine()) == null && username.length() == 0);
 					}
 					System.out.println(username + " is unique");
-
+					*/
 					String password;
 					String firstName;
 					String lastName;

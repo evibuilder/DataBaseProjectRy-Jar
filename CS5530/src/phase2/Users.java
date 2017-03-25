@@ -37,28 +37,23 @@ public class Users {
 		boolean result = false;
 		
 		//String sql="select password from Users where login='jshaw'";
-		String sql="SELECT * FROM Users";
+		String sql="SELECT * FROM Users"; //Testing a basic query
 		String output="";
-		ResultSet rs=null;
-
+		ResultSet rs = null;
+		
 		 	try{
-   		 	rs=stmt.executeQuery(sql);
+   		 	//rs=stmt.executeQuery(sql);
+   		 	stmt.executeQuery(sql);
    		 	
-   		 	if(rs.wasNull()){
-   		 		result = false;
-   		 	}else{
-   		 		if(rs.getString(0).equals(password)){
-   		 			result = true;
-   		 		}
+   		 	if(rs.getString(0).equals(password)){
+   		 		result = true;
    		 	}
-		     
+   		 	
 		     rs.close();
 		 	}
 		 	catch(SQLException e)
 		 	{
 		 		System.out.println("cannot execute the query");
-		 		System.out.println("error code: " + e.getSQLState());
-		 		System.err.println(e.getMessage());
 		 	}
 		 	finally
 		 	{
@@ -78,8 +73,26 @@ public class Users {
 	//try to add a new user to the system
 	public boolean registerNewUser(String username, String password, String firstName, String lastName, String address, String phoneNumber, Statement stmt){
 		boolean result = false;
+		int rowsChanged = 0;
 		
-		return result; 
+		String sql="INSERT into Users (login, password, firstname, lastname, address, phonenumber, admin)"
+				+ "VALUES ('"+username+"','"+password+"','"+firstName+"','"+lastName+"','"+address+"','"+phoneNumber+"', 0)";
+		
+		 	try{
+   		 	rowsChanged = stmt.executeUpdate(sql);
+   		 	
+   		 	if(rowsChanged > 0){
+   		 		result = true;
+   		 	}
+   		 	
+		 	}
+		 	catch(SQLException e)
+		 	{
+		 		System.out.println("cannot execute the query");
+		 	}
+
+		 	
+		return result;
 	}
 	
 	public boolean checkForUsernameUniqueness(String username, Statement stmt ){
