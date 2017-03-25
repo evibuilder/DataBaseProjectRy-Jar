@@ -2,24 +2,24 @@ package phase2;
 
 public class Tuple {
 	
-	private int first;
+	private String first;
 	private int second; 
 	private int third;
 	
 	public Tuple(){
-		first = 0;
+		first = "";
 		second = 0;
 		third = 0;
 	}
 	
-	public Tuple(int first, int second, int third)
+	public Tuple(String first, int second, int third)
 	{
 		this.first = first;
 		this.second = second;
 		this.third = third;
 	}
 	
-	public void setFirst(int first){
+	public void setFirst(String first){
 		this.first = first;
 	}
 	
@@ -31,7 +31,7 @@ public class Tuple {
 		this.third = third;
 	}
 	
-	public int first(){
+	public String first(){
 		return first;
 	}
 	

@@ -15,17 +15,18 @@ public class Users {
 	}
 	
 	//rates the user from the given user with the rating or trusted or not-trusted
-	public void rateUser(int idOfUserDoingRating, int idOfUserGettingRated, String rating, Statement stmt){
+	public void rateUser(String userDoingRating, String userGettingRated, String rating, Statement stmt){
 		
-	}
-	
-	//returns a user id from the given user name
-	public int userIdFromName(String name, Statement stmt){
-		return -1;
 	}
 	
 	//checks whether the user is an admin
 	public boolean isAdmin(String username, Statement stmt){
+		boolean result = false;
+		
+		return result;
+	}
+	
+	public boolean isValidUsername(String username, Statement stmt){
 		boolean result = false;
 		
 		return result;
@@ -88,13 +89,13 @@ public class Users {
 	}
 	
 	//calculate two degrees of separation
-	public String calculateDegreeOfSeparation(int firstUserId, int secondUserId, Statement stmt){
+	public String calculateDegreeOfSeparation(String firstUserLogin, String secondUserLogin, Statement stmt){
 		
 		return null;
 	}
 	
 	//for the given user, make the TH their favorite
-	public void makeHousingFavorite(int userID, int idOfTH, Statement stmt){
+	public void makeHousingFavorite(String userLogin, int idOfTH, Statement stmt){
 		
 	}
 

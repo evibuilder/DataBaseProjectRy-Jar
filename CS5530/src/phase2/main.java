@@ -82,7 +82,6 @@ public class main {
 		String choice;
 		String username = "";
 		String sql = null;
-		int currentUserId;
 		int c = 0;
  
 		Set<Tuple> reservationsInCart = new TreeSet<Tuple>(); 
@@ -181,9 +180,6 @@ public class main {
 			// reset choice
 			c = 0;
 			
-			//get current user id
-			currentUserId = user.userIdFromName(username, con.stmt);
-
 			// main menu
 			while (true) {
 				displayMainMenu();
@@ -257,7 +253,7 @@ public class main {
 										c = 0;
 										continue;
 									}
-									Tuple newReservation = new Tuple(currentUserId, idOfTH, periodID);
+									Tuple newReservation = new Tuple(username, idOfTH, periodID);
 									reservationsInCart.add(newReservation);
 
 									System.out.println("The reservation was added to your cart");
@@ -353,7 +349,7 @@ public class main {
 						{
 							System.out.println("Here is a list of your reservations:");
 
-							System.out.println(reservations.displayReservation(currentUserId, con.stmt));
+							System.out.println(reservations.displayReservation(username, con.stmt));
 							
 							System.out.println("Please select the id of the reservation you would like to record a stay:");
 							String line;
@@ -367,7 +363,7 @@ public class main {
 								continue;
 							}
 							
-							if(reservations.checkForReservation(currentUserId, reservationID, con.stmt)){
+							if(reservations.checkForReservation(username, reservationID, con.stmt)){
 								staysInCart.add(reservationID);
 								System.out.println("That stay was added to your cart:");
 							}else{
@@ -404,7 +400,7 @@ public class main {
 								}
 								
 								if(housing.checkHousingExists(idOfTh, con.stmt)){
-									user.makeHousingFavorite(currentUserId, idOfTh, con.stmt);
+									user.makeHousingFavorite(username, idOfTh, con.stmt);
 								}
 								else{
 									System.out.println("That was not a valid ID");
@@ -571,10 +567,7 @@ public class main {
 							System.out.println("Which user would you like to rate?:");
 							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
 							
-							int idUserToBeRated = -1;
-							idUserToBeRated = user.userIdFromName(nameUserToBeRated, con.stmt);
-							
-							if(idUserToBeRated == -1){
+							if(user.isValidUsername(nameUserToBeRated, con.stmt) == false){
 								System.out.println("user " + nameUserToBeRated + " could not be found");
 								c = 0;
 							}
@@ -600,7 +593,7 @@ public class main {
 								if(i == 1) {rating = "Trusted";}
 								else if(i == 2) {rating = "Not-Trusted";}
 
-								user.rateUser(currentUserId, idUserToBeRated, rating, con.stmt);
+								user.rateUser(username, nameUserToBeRated, rating, con.stmt);
 							}
 
 						}
@@ -612,34 +605,25 @@ public class main {
 				} 
 				else if (c == 3) // two degrees of separation
 				{
-					int firstUserId;
-					int secondUserId;
+					String firstUsername;
+					String secondUsername;
 					
 					System.out.println("The following are all the users of the system:");
-					System.out.println("Please select the ID of the first user:");
-					String line;
-					while((line =in.readLine())== null && line.length() == 0);
-					try{
-						firstUserId = Integer.parseInt(line);
-					}catch(Exception e){
-						System.out.println("Invalid ID");
-						c = 0;
-						break;
-					}
+					System.out.println("Please select the username of the first user:");
+					while((firstUsername =in.readLine())== null && firstUsername.length() == 0);
+
 					
-					System.out.println("Please select the ID of the second user:");
-					line = null;
-					while((line = in.readLine()) == null && line.length() == 0);
-					try{
-						secondUserId = Integer.parseInt(line);
-					}catch(Exception e){
-						System.out.println("Invalid ID");
-						c = 0;
-						break;
-					}
+					System.out.println("Please select the username of the second user:");
+					while((secondUsername = in.readLine()) == null && secondUsername.length() == 0);
+
 					
 					//perform calculation
-					System.out.println(user.calculateDegreeOfSeparation(firstUserId, secondUserId, con.stmt));
+					if(user.isValidUsername(firstUsername, con.stmt) && user.isValidUsername(secondUsername, con.stmt)){
+						System.out.println(user.calculateDegreeOfSeparation(firstUsername, secondUsername, con.stmt));
+					}else{
+						System.out.println("Either one or both of the usernames provided were not valid:");
+					}
+
 				} 
 				else if (c == 4) // statistics
 				{
@@ -757,7 +741,7 @@ public class main {
 					
 					if(i == 1){
 						for (int item : staysInCart){
-							reservations.recordStay(currentUserId, item, con.stmt);
+							reservations.recordStay(username, item, con.stmt);
 						}
 						System.out.println("Stays were recorded:");
 					}
