@@ -129,7 +129,7 @@ public class main {
 					while ((password = in.readLine()) == null && password.length() == 0);
 
 					if (user.login(username, password, con.stmt) == false) {
-						System.out.println("The username or password is incorrect");
+						System.out.println("Login failed");
 						c = 0;
 					}else{
 						System.out.println("Login successful");

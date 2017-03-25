@@ -1,6 +1,7 @@
 package phase2;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Users {
@@ -34,7 +35,8 @@ public class Users {
 	public boolean login(String username, String password, Statement stmt){
 		boolean result = false;
 		
-		String sql="select password from Users where login='jshaw'";
+		//String sql="select password from Users where login='jshaw'";
+		String sql="SELECT * FROM Users";
 		String output="";
 		ResultSet rs=null;
 
@@ -51,9 +53,10 @@ public class Users {
 		     
 		     rs.close();
 		 	}
-		 	catch(Exception e)
+		 	catch(SQLException e)
 		 	{
 		 		System.out.println("cannot execute the query");
+		 		System.out.println("error code: " + e.getSQLState());
 		 	}
 		 	finally
 		 	{
@@ -77,7 +80,7 @@ public class Users {
 		return result; 
 	}
 	
-	public boolean checkForUsernameUniqueness(String username, Statement stmt){
+	public boolean checkForUsernameUniqueness(String username, Statement stmt ){
 		boolean result = false;
 		
 		return result;
