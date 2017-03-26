@@ -24,6 +24,9 @@ public class Housing {
 	
 	//returns a string that displays all columns of the given ph id
 	public String displayPHinformation(int id, Statement stmt){
+		String sql="SELECT *"
+				+ "FROM Housing"
+				+ "WHERE hid = " + id;
 		return null;
 	}
 	
