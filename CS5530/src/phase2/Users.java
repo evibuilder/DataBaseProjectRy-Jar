@@ -36,24 +36,26 @@ public class Users {
 	public boolean login(String username, String password, Statement stmt){
 		boolean result = false;
 		
-		//String sql="select password from Users where login='jshaw'";
-		String sql="SELECT * FROM Users"; //Testing a basic query
-		String output="";
+		String sql="SELECT password from Users where login = '"+username+"'";
+
 		ResultSet rs = null;
 		
 		 	try{
-   		 	//rs=stmt.executeQuery(sql);
-   		 	stmt.executeQuery(sql);
+		 		
+   		 	rs = stmt.executeQuery(sql);
+   		 	rs.next();
    		 	
-   		 	if(rs.getString(0).equals(password)){
-   		 		result = true;
-   		 	}
+   	   		if(rs.getString("password").equals(password)){
+   	   			result = true;
+   	   		}
    		 	
+
 		     rs.close();
 		 	}
 		 	catch(SQLException e)
 		 	{
-		 		System.out.println("cannot execute the query");
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
 		 	}
 		 	finally
 		 	{
@@ -88,8 +90,10 @@ public class Users {
 		 	}
 		 	catch(SQLException e)
 		 	{
-		 		System.out.println("cannot execute the query");
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
 		 	}
+		 	
 
 		 	
 		return result;
@@ -108,8 +112,31 @@ public class Users {
 	}
 	
 	//for the given user, make the TH their favorite
-	public void makeHousingFavorite(String userLogin, int idOfTH, Statement stmt){
+	public String makeHousingFavorite(String userLogin, int idOfTH, Statement stmt){
+		String result = "";
+		int rowsChanged = 0;
 		
+		String sqlDate = LocalDate.getSQLDate();
+		
+		String sql = "UPDATE Favorites "
+				+ "SET hid = "+idOfTH+", fvDate = '"+sqlDate+"' WHERE login = '"+userLogin+"'";
+		
+		try{
+			rowsChanged = stmt.executeUpdate(sql);
+			if(rowsChanged == 0){
+				result = "There was an error updating the system";
+			}else{
+				result = "New Favorite was successfully updated";
+			}
+		}	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+			System.err.println(sqlDate);
+	 	}
+		
+		return result;
 	}
 
 }
