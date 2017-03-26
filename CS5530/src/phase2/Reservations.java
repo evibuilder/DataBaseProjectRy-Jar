@@ -16,8 +16,29 @@ public class Reservations {
 	}
 	
 	//makes a reservation given a userid and temp housing id
-	public void makeReservation(String username, int housingID, int periodID, Statement stmt){
+	public String makeReservation(String username, int housingID, int periodID, Statement stmt){
+		int cost = getCostOfStay(username, housingID, periodID, stmt);
 		
+		String result = "";
+		int affectedRows = 0;
+		
+		String sql = "INSERT INTO Reserve (login, hid, pid, cost) "
+				+ "VALUES ('"+username+"',"+housingID+","+periodID+","+cost+")";
+		
+		try{
+			affectedRows = stmt.executeUpdate(sql);
+			
+			if(affectedRows == 0){
+				result = "There was an error processing the request:";
+			}else{
+				result = "Reservation was recorded:";
+			}
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		return result;
 	}
 	
 	//returns a string that displays all reservations for the given user id
@@ -52,7 +73,7 @@ public class Reservations {
 	public boolean checkForReservation(String username, int housingID, int periodID, Statement stmt){
 		boolean result = false;
 		
-		String sql = "SELECT * FROM Reserve WHERE login = '"+username+"', hid = "+housingID+", pid = "+periodID+"";
+		String sql = "SELECT * FROM Reserve WHERE login = '"+username+"' AND hid = "+housingID+" AND pid = "+periodID+"";
 		
 		ResultSet rs = null;
 		try{
@@ -68,8 +89,100 @@ public class Reservations {
 		return result;
 	}
 	
-	//records a stay with the following reservationID information
-	public void recordStay(String username, int hid, int pid, Statement stmt){
+	private int getCostOfStay(String username, int hid, int pid, Statement stmt){
+		int cost = 0;
+		String sql = "SELECT cost FROM Reserve WHERE login = '"+username+"' AND hid ="+hid+" AND pid = "+pid+"";
 		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			cost = rs.getInt("cost");
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}finally{
+	 		try{
+   		 		if (rs!=null && !rs.isClosed())
+   		 			rs.close();
+		 		}
+		 		catch(Exception e)
+		 		{
+		 			System.out.println("cannot close resultset");
+		 		}
+		}
+		
+		return cost;
+	}
+	
+	//records a stay with the following reservationID information
+	public String recordStay(String username, int hid, int pid, Statement stmt){
+		
+		int cost = getCostOfStay(username, hid, pid, stmt);
+		
+		String result = "";
+		int affectedRows = 0;
+		
+		String sql = "INSERT INTO Visit (login, hid, pid, cost) "
+				+ "VALUES ('"+username+"',"+hid+","+pid+","+cost+")";
+		
+		try{
+			affectedRows = stmt.executeUpdate(sql);
+			
+			if(affectedRows == 0){
+				result = "There was an error processing the request:";
+			}else{
+				result = "Stay was recorded:";
+			}
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		return result;
+	}
+	
+	public String removeReservation(String username, int hid, int pid, Statement stmt){
+		String result = "";
+		String sql = "DELETE FROM Reserve WHERE username ='"+username+"' AND hid = "+hid+" AND pid = "+pid+"";
+		
+		int rowsAffected = 0;
+		
+		try{
+			rowsAffected = stmt.executeUpdate(sql);
+			
+			if(rowsAffected == 0){
+				result = "There was an error processing the request:";
+			}else{
+				result = "Reservation was completed:";
+			}
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		return result;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

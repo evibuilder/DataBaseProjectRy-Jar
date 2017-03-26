@@ -77,7 +77,6 @@ public class main {
 
 	public static void main(String[] args) {
 
-		System.out.println(LocalDate.getSQLDate());
 		
 		Connector con = null;
 		String choice;
@@ -139,7 +138,7 @@ public class main {
 				{
 					System.out.println("Please choose a username:");
 					while ((username = in.readLine()) == null && username.length() == 0);
-					/*
+					
 					// check for uniqueness of username
 					while (user.checkForUsernameUniqueness(username, con.stmt) == false) {
 
@@ -148,8 +147,8 @@ public class main {
 						username = null;
 						while ((username = in.readLine()) == null && username.length() == 0);
 					}
-					System.out.println(username + " is unique");
-					*/
+					System.out.println(username + " is unique:");
+					
 					String password;
 					String firstName;
 					String lastName;
@@ -437,7 +436,7 @@ public class main {
 								staysInCart.add(pair);
 								System.out.println("That stay was added to your cart:");
 							}else{
-								System.out.println("That was not a valid reservation ID:");
+								System.out.println("The provided ID's were not valid");
 								c = 0;
 							}
 						} 
@@ -626,7 +625,7 @@ public class main {
 							System.out.println("Which user would you like to rate?:");
 							while((nameUserToBeRated = in.readLine()) == null && nameUserToBeRated.length() == 0);
 							
-							if(user.isValidUsername(nameUserToBeRated, con.stmt) == false){
+							if(user.checkUserExists(nameUserToBeRated, con.stmt) == false){
 								System.out.println("user " + nameUserToBeRated + " could not be found");
 								c = 0;
 							}
@@ -677,7 +676,7 @@ public class main {
 
 					
 					//perform calculation
-					if(user.isValidUsername(firstUsername, con.stmt) && user.isValidUsername(secondUsername, con.stmt)){
+					if(user.checkUserExists(firstUsername, con.stmt) && user.checkUserExists(secondUsername, con.stmt)){
 						System.out.println(user.calculateDegreeOfSeparation(firstUsername, secondUsername, con.stmt));
 					}else{
 						System.out.println("Either one or both of the usernames provided were not valid:");
@@ -778,10 +777,10 @@ public class main {
 					
 					
 					if(i == 1){
-						for(Pair pair : reservationsInCart){
-							reservations.makeReservation(username, pair.first(), pair.second(), con.stmt);
+						for(Pair p : reservationsInCart){
+							System.out.println(reservations.makeReservation(username, p.first(), p.second(), con.stmt));
+							System.out.println(period.removePeriodFromAvailability(p.first(),  p.second(), con.stmt));
 						}
-						System.out.println("Reservations were recorded:");
 					}else{
 						System.out.println("Reservations were discarded:");
 					}
@@ -800,9 +799,9 @@ public class main {
 					
 					if(i == 1){
 						for (Pair p : staysInCart){
-							reservations.recordStay(username, p.first(), p.second(), con.stmt);
+							System.out.println(reservations.recordStay(username, p.first(), p.second(), con.stmt));
+							System.out.println(reservations.removeReservation(username, p.first(), p.second(), con.stmt));
 						}
-						System.out.println("Stays were recorded:");
 					}
 					else{
 						System.out.println("Stays were discarded:");

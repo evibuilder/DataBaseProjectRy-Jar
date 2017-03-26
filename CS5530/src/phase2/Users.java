@@ -26,7 +26,8 @@ public class Users {
 		return result;
 	}
 	
-	public boolean isValidUsername(String username, Statement stmt){
+	//check whether a user exists
+	public boolean checkUserExists(String username, Statement stmt){
 		boolean result = false;
 		
 		return result;
@@ -100,7 +101,41 @@ public class Users {
 	}
 	
 	public boolean checkForUsernameUniqueness(String username, Statement stmt ){
-		boolean result = false;
+		boolean result = true;
+		
+		String sql = "SELECT login FROM Users WHERE login = '"+username+"'";
+		
+		ResultSet rs = null;
+		
+	 	try{
+	 		
+		 	rs = stmt.executeQuery(sql);
+
+		 	while(rs.next()){
+		 		if(rs.getString("login").equals(username)){
+		 			result = false;
+		 		}
+		 	}
+		 	
+
+	     rs.close();
+	 	}
+	 	catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+	 	finally
+	 	{
+	 		try{
+		 		if (rs!=null && !rs.isClosed())
+		 			rs.close();
+	 		}
+	 		catch(Exception e)
+	 		{
+	 			System.out.println("cannot close resultset");
+	 		}
+	 	}
 		
 		return result;
 	}
