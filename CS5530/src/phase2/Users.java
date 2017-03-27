@@ -52,25 +52,7 @@ public class Users {
 	//check whether a user exists
 	public boolean checkUserExists(String username, Statement stmt){
 		boolean result = false;
-		String sql="SELECT login from Users where login = '"+username+"'";
-		
-<<<<<<< HEAD
-		ResultSet rs = null;
-		
-	 	try{
-	 		
-		 	rs = stmt.executeQuery(sql);
-		 	rs.next();
-		 	
-	   		if(rs.getString("login").equals(username)){
-	   			result = true;
-	   		}
-		 	
 
-	     rs.close();
-	 	}
-	 	catch(SQLException e)
-=======
 		String sql = "SELECT * FROM Users WHERE login = '"+username+"'";
 		
 		ResultSet rs = null;
@@ -82,12 +64,10 @@ public class Users {
 			}
 		}		 	
 		catch(SQLException e)
->>>>>>> origin/master
 	 	{
 			System.err.println("cannot execute the query");
 			System.err.println("error: " + e.getMessage());
 	 	}
-<<<<<<< HEAD
 	 	finally
 	 	{
 	 		try{
@@ -99,9 +79,6 @@ public class Users {
 	 			System.out.println("cannot close resultset");
 	 		}
 	 	}
-=======
-		
->>>>>>> origin/master
 		return result;
 	}
 	
