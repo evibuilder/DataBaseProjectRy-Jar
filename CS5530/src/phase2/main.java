@@ -665,6 +665,7 @@ public class main {
 					String secondUsername;
 					
 					System.out.println("The following are all the users of the system:");
+					System.out.println(user.showAllUsers(con.stmt));
 					System.out.println("Please select the username of the first user:");
 					while((firstUsername =in.readLine())== null && firstUsername.length() == 0);
 
