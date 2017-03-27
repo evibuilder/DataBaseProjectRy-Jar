@@ -20,4 +20,12 @@ public class Statistics {
 	public String mostHighlyRatedPH(int numberOfResults, Statement stmt){
 		return null;
 	}
+	
+	public String mostUsefulUsers(int numberOfResults, Statement stmt){
+		return null;
+	}
+	
+	public String mostTrustedUsers(int numberOfResults, Statement stmt){
+		return null;
+	}
 }

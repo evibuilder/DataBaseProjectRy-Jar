@@ -35,16 +35,28 @@ public class Users {
 		return result;
 	}
 	
-	//rates the user from the given user with the rating or trusted or not-trusted
-	public void rateUser(String userDoingRating, String userGettingRated, String rating, Statement stmt){
-		String sql="INSERT into Feedback(login1, login2, isTrusted) "
-				+ "VALUES ("+userDoingRating+",'"+userGettingRated+"','"+rating+"')";
-		
-	}
-	
 	//checks whether the user is an admin
 	public boolean isAdmin(String username, Statement stmt){
 		boolean result = false;
+		
+		String sql = "SELECT admin FROM Users WHERE login = '"+username+"'";
+		
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			if(rs.getInt("admin") == 1){
+				result = true;
+			}
+
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
 		
 		return result;
 	}
