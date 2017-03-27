@@ -875,7 +875,7 @@ public class main {
 								throw e;
 							}
 
-							System.out.println(stats.mostPopularTH(numResults, con.stmt));
+							stats.mostPopularTH(numResults, con.stmt);
 						} 
 						else if (c == 2) // most expensive TH
 						{

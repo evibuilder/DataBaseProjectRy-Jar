@@ -240,6 +240,68 @@ public class Housing {
 	public String browseTemporaryHousing(int lowerPriceRange, int upperPriceRange, String city, String keyword, String category, int sorting, Statement stmt){
 		String result = "";
 		
+		String sql = "select distinct * from Housing h, Available a";
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+			
+			while(rs.next()){
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + " ");
+				}
+				System.out.println();
+			}
+		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		if(upperPriceRange > 0){
+			sql = "select distinct * from Housing h, Available a where price > "+lowerPriceRange+" AND price < "+upperPriceRange+"";
+		
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				
+				while(rs.next()){
+					for(int i = 1; i <= colCount; i++){
+						System.out.print(rs.getString(i) + " ");
+					}
+					System.out.println();
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
+		
+		if(city != null){
+			sql = "select distinct * from Housing h, Available a where city = '"+city+"'";
+			
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				int colCount = rsmd.getColumnCount();
+				
+				while(rs.next()){
+					for(int i = 1; i <= colCount; i++){
+						System.out.print(rs.getString(i) + " ");
+					}
+					System.out.println();
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
 		
 		return result;
 	}
