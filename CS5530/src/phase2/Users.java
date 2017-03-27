@@ -31,7 +31,38 @@ public class Users {
 	//check whether a user exists
 	public boolean checkUserExists(String username, Statement stmt){
 		boolean result = false;
+		String sql="SELECT login from Users where login = '"+username+"'";
 		
+		ResultSet rs = null;
+		
+	 	try{
+	 		
+		 	rs = stmt.executeQuery(sql);
+		 	rs.next();
+		 	
+	   		if(rs.getString("login").equals(username)){
+	   			result = true;
+	   		}
+		 	
+
+	     rs.close();
+	 	}
+	 	catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+	 	finally
+	 	{
+	 		try{
+		 		if (rs!=null && !rs.isClosed())
+		 			rs.close();
+	 		}
+	 		catch(Exception e)
+	 		{
+	 			System.out.println("cannot close resultset");
+	 		}
+	 	}
 		return result;
 	}
 	
@@ -146,13 +177,13 @@ public class Users {
 	public String calculateDegreeOfSeparation(String firstUserLogin, String secondUserLogin, Statement stmt){
 		//getting the separation degree of login 1 and login 2
 		String result = null;
-		String sql1 = "select count(*)"
-						+ "from (select *"
-							+"from Favorites"
-							+"where login = '"+firstUserLogin+"')As f1,"
-							+"(select *"
-						+   "from Favorites"
-						+ "where login = 'r"+secondUserLogin+"')As f2"
+		String sql1 = "select count(*) "
+						+ "from (select * "
+							+"from Favorites "
+							+"where login = '"+firstUserLogin+"')As f1, "
+							+"(select * "
+						+   "from Favorites "
+						+ "where login = '"+secondUserLogin+"')As f2 "
 				         + "where f1.hid = f2.hid";
 		ResultSet rs = null;
 		try{
@@ -171,19 +202,19 @@ public class Users {
 		     }
 		     else
 		     {
-		    	 String sql2 = "select count(*)"
-							+ "from (select *"
-								+"from Favorites"
-								+"where login = '"+firstUserLogin+"')As f1,"
-								+"(select *"
-							+   "from Favorites"
-							+ "where login != 'r"+secondUserLogin+"')As f2"
-					         + "where f1.hid = f2.hid";
+		    	 String sql2 = "select count(*) "
+							+ "from (select * "
+								+"from Favorites "
+								+"where login = '"+firstUserLogin+"')As f1, "
+								+"(select * "
+							+   "from Favorites "
+							+ "where login != '"+firstUserLogin+"')As f2 "
+					         + "where f1.hid = f2.hid ";
 		    	 ResultSet rs1 = null;
 		    	 try{
 				 		
 		    		 	
-		    		 	rs1 = stmt.executeQuery(sql1);
+		    		 	rs1 = stmt.executeQuery(sql2);
 		    		 	rs1.next();
 		    		 	
 		    		 	String sep2 = rs1.getString("count(*)");
@@ -200,14 +231,14 @@ public class Users {
 		    		 	
 
 		 		     rs1.close();
-		 		    String sql3 = "select count(*)"
-							+ "from (select *"
-								+"from Favorites"
-								+"where login = '"+firstUserLogin+"')As f1,"
-								+"(select *"
-							+   "from Favorites"
-							+ "where login != 'r"+secondUserLogin+"')As f2"
-					         + "where f1.hid = f2.hid";
+		 		    String sql3 = "select count(*) "
+							+ "from (select * "
+								+"from Favorites "
+								+"where login = '"+secondUserLogin+"')As f1, "
+								+"(select * "
+							+   "from Favorites "
+							+ "where login != '"+secondUserLogin+"')As f2 "
+					         + "where f1.hid = f2.hid" ;
 		 		    ResultSet rs2 = null;
 		 		   try{
 				 		
