@@ -6,13 +6,65 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Reservations {
 	public Reservations(){}
 	
 	//returns a string that lists suggestions based on what user reserved, see number 11) in project outline
 	public String getSuggestedReservations(int idOfTH, Statement stmt){
-		return null;
+		String result = "";
+		String sql = "SELECT hid "
+				   + "FROM Reserve r1 "
+				   + "WHERE EXISTS   (SELECT * " 
+						     	   + "FROM Reserve r2 "
+								   + "WHERE r1.login = r2.login AND r2.hid = "+idOfTH+")";
+		
+		Set<Integer> hids = new TreeSet<Integer>();
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				int value = rs.getInt(1);
+				if(value != idOfTH){
+					hids.add(value);
+				}
+			}
+		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		for(Integer hid : hids){
+			result += suggestedResHelper(hid, stmt);
+			result += "\n";
+		}
+		
+		return result;
+	}
+	
+	private String suggestedResHelper(int hid, Statement stmt){
+		String result = "";
+		
+		String sql = "SELECT * FROM Housing WHERE hid = "+hid+"";
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+			rs.next();
+			result += rs.getInt("hid") + "\t" + rs.getString("name") + "\t" +
+					rs.getString("address") + "\t" + rs.getString("category") +
+					"\t" + rs.getString("URL");
+		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		return result;
 	}
 	
 	//makes a reservation given a userid and temp housing id
