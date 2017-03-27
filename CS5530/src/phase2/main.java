@@ -276,6 +276,7 @@ public class main {
 							String category = "";
 							int yearBuilt;
 							String phonenumber;
+							String city;
 							
 							System.out.println("Enter the details for the new permanent housing:");
 							System.out.println("Name:");
@@ -283,6 +284,9 @@ public class main {
 							
 							System.out.println("Address:");
 							while((address = in.readLine()) == null && address.length() == 0);
+							
+							System.out.println("City:");
+							while((city = in.readLine()) == null && city.length() == 0);
 							
 							System.out.println("URL:");
 							while((url = in.readLine()) == null && url.length() == 0);
@@ -321,13 +325,14 @@ public class main {
 							while((phonenumber = in.readLine()) == null && phonenumber.length() == 0);
 							
 							
-							System.out.println(housing.addNewPH(thName, address, category, url, yearBuilt, phonenumber, username, con.stmt));
+							System.out.println(housing.addNewPH(thName, address, category, url, yearBuilt, phonenumber, username, city, con.stmt));
 						} 
 						else if (c == 3) // update existing PH
 						{
 
-								System.out.println("Please select the ID of the permanent house you would like to update:");
 								System.out.println(housing.showHousingOwnedByUser(username, con.stmt));
+								System.out.println("Please select the ID of the permanent house you would like to update:");
+
 								String line;
 								int idOfPh;
 								while((line = in.readLine()) == null && line.length() == 0);
@@ -348,59 +353,86 @@ public class main {
 									System.out.println("\tCurrent information");
 									System.out.println(housing.displayPHinformation(idOfPh, con.stmt));
 									System.out.println();
-									System.out.println("Please enter updated information");
 									
-									String thName;
-									String address;
-									String url;
-									int yearBuilt;
-									String category = "";
-									String phonenumber;
+									System.out.println("Would you like to update or remove this housing?:");
+									System.out.println("1. Update:");
+									System.out.println("2. Remove:");
 									
-									System.out.println("Name:");
-									while((thName = in.readLine()) == null && thName.length() == 0);
+									int i = 0;
 									
-									System.out.println("Address:");
-									while((address = in.readLine()) == null && address.length() == 0);
-									
-									System.out.println("URL:");
-									while((url = in.readLine()) == null && url.length() == 0);
-									
-									int descision = 0;
-									while(descision != 1 && descision != 2 && descision != 3){
-										System.out.println("Category:");
-										System.out.println("1. Studio:");
-										System.out.println("2. Condo:");
-										System.out.println("3. House:");
+									while(i != 1 && i != 2){
 										line = null;
 										while((line = in.readLine()) == null && line.length() == 0);
 										try{
-											descision = Integer.parseInt(line);
+											i = Integer.parseInt(line);
+										}catch(Exception e){
+											continue;
+										}
+									}
+									
+									if(i == 1)
+										{
+										System.out.println("Please enter updated information");
+										
+										String thName;
+										String address;
+										String url;
+										int yearBuilt;
+										String category = "";
+										String phonenumber;
+										String city;
+										
+										System.out.println("Name:");
+										while((thName = in.readLine()) == null && thName.length() == 0);
+										
+										System.out.println("Address:");
+										while((address = in.readLine()) == null && address.length() == 0);
+										
+										System.out.println("City:");
+										while((city = in.readLine()) == null && city.length() == 0);
+										
+										System.out.println("URL:");
+										while((url = in.readLine()) == null && url.length() == 0);
+										
+										int descision = 0;
+										while(descision != 1 && descision != 2 && descision != 3){
+											System.out.println("Category:");
+											System.out.println("1. Studio:");
+											System.out.println("2. Condo:");
+											System.out.println("3. House:");
+											line = null;
+											while((line = in.readLine()) == null && line.length() == 0);
+											try{
+												descision = Integer.parseInt(line);
+											}catch(Exception e){
+												continue;
+											}
+											
+											if(descision < 1 || descision > 3) continue;
+											
+											if(descision == 1) category = "Studio";
+											else if(descision == 2) category = "Condo";
+											else if(descision == 3) category = "House";
+										}
+										
+										System.out.println("Year built:");
+										line = null;
+										while((line = in.readLine()) == null && line.length() == 0);
+										try{
+											yearBuilt = Integer.parseInt(line);
 										}catch(Exception e){
 											continue;
 										}
 										
-										if(descision < 1 || descision > 3) continue;
+										System.out.println("Phone number:");
+										while((phonenumber = in.readLine()) == null && phonenumber.length() == 0);
 										
-										if(descision == 1) category = "Studio";
-										else if(descision == 2) category = "Condo";
-										else if(descision == 3) category = "House";
+										
+										System.out.println(housing.updateCurrentPH(idOfPh, thName, address, category, url, yearBuilt, phonenumber, username, city, con.stmt));	
 									}
-									
-									System.out.println("Year built:");
-									line = null;
-									while((line = in.readLine()) == null && line.length() == 0);
-									try{
-										yearBuilt = Integer.parseInt(line);
-									}catch(Exception e){
-										continue;
+									else if(i == 2){
+										System.out.println(housing.removeHousingOwnedByUser(idOfPh, con.stmt));
 									}
-									
-									System.out.println("Phone number:");
-									while((phonenumber = in.readLine()) == null && phonenumber.length() == 0);
-									
-									
-									System.out.println(housing.updateCurrentPH(idOfPh, thName, address, category, url, yearBuilt, phonenumber, username, con.stmt));
 								}
 								else{
 									System.out.println("That was not a valid ID:");

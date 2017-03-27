@@ -10,12 +10,12 @@ public class Housing {
 	public Housing(){}
 	
 	//adds a new PH to the system
-	public String addNewPH(String thName, String address, String category, String url, int yearBuilt, String phonenumber, String username, Statement stmt){
+	public String addNewPH(String thName, String address, String category, String url, int yearBuilt, String phonenumber, String username, String city, Statement stmt){
 		int rowsChanged = 0;
 		String result = "";
 		
-		String sql="INSERT into Housing (name, address, category, URL, yearbuilt, phonenumber, login)"
-				+ "VALUES ('"+thName+"','"+address+"','"+category+"','"+url+"',"+yearBuilt+", '"+phonenumber+"', '"+username+"')";
+		String sql="INSERT into Housing (name, address, category, URL, yearbuilt, phonenumber, login, city)"
+				+ "VALUES ('"+thName+"','"+address+"','"+category+"','"+url+"',"+yearBuilt+", '"+phonenumber+"', '"+username+"', '"+city+"')";
 		
 		 	try{
    		 	rowsChanged = stmt.executeUpdate(sql);
@@ -37,7 +37,7 @@ public class Housing {
 	}
 	
 	//updates the existing PH with the new information
-	public String updateCurrentPH(int hid, String thName, String address, String category, String url, int yearBuilt, String phonenumber, String username, Statement stmt){
+	public String updateCurrentPH(int hid, String thName, String address, String category, String url, int yearBuilt, String phonenumber, String username, String city, Statement stmt){
 		int rowsChanged = 0;
 		String result = "";
 		
@@ -45,7 +45,7 @@ public class Housing {
 		
 		String sql="UPDATE Housing "
 				+ "SET name = '"+thName+"', address = '"+address+"', category = '"+category+"', "
-						+ "URL = '"+url+"', yearbuilt = "+yearBuilt+", phonenumber = '"+phonenumber+"' "
+						+ "URL = '"+url+"', yearbuilt = "+yearBuilt+", phonenumber = '"+phonenumber+"', city = '"+city+"' "
 								+ "WHERE hid = "+hid+"";
 		try{
 			rowsChanged = stmt.executeUpdate(sql);
@@ -63,6 +63,28 @@ public class Housing {
 		return result;
 	}
 	
+	public String removeHousingOwnedByUser(int hid, Statement stmt){
+		String result = "";
+		String sql = "DELETE from Housing where hid = "+hid+"";
+		
+		int rowsAffected = 0;
+		
+		try{
+			rowsAffected = stmt.executeUpdate(sql);
+			if(rowsAffected > 0){
+				result += "House was removed:";
+			}else{
+				result += "There was an error processing your request:";
+			}
+		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		return result;
+	}
+	
 	public String showHousingOwnedByUser(String username, Statement stmt){
 		String result = "";
 		String sql = "SELECT * FROM Housing WHERE login = '"+username+"'";
@@ -73,9 +95,10 @@ public class Housing {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int colCount = rsmd.getColumnCount();
 			while(rs.next()){
-				for(int i = 1; i < colCount; i ++){
+				for(int i = 1; i <= colCount; i ++){
 					result += rs.getString(i) + " ";
 				}
+				result += "\n";
 			}
 			
 		}catch(SQLException e){
