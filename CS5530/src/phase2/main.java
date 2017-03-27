@@ -466,7 +466,146 @@ public class main {
 						} 
 						else if (c == 6) // browse TH
 						{
-							System.out.println("browse TH");
+							//search by price
+							System.out.println("Building search query:");
+							System.out.println("Would you like to add a price to search by?:");
+							
+							System.out.println("1. Yes:");
+							System.out.println("2. No:");
+
+							int i = 0;
+							String line;
+							while(i != 1 && i != 2){
+								while((line = in.readLine())== null && line.length() == 0);
+								try{
+									i = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								line = null;
+
+							}
+							
+							int lowerPriceRange = 0;
+							int upperPriceRange = 0;
+							
+							//get price range
+							if(i == 1){
+								line = null;
+								System.out.println("Lower price range:");
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									lowerPriceRange = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								
+								line = null;
+								System.out.println("Upper price range:");
+								while((line = in.readLine()) == null && line.length() == 0);
+								try{
+									upperPriceRange = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+							}
+							
+							//search by city
+							System.out.println("Would you like to add a city to search by?:");
+							System.out.println("1. Yes:");
+							System.out.println("2. No:");
+
+							i = 0;
+							line = null;
+							while(i != 1 && i != 2){
+								while((line = in.readLine())== null && line.length() == 0);
+								try{
+									i = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								line = null;
+
+							}
+							
+							//get city input
+							String city = null;
+							if(i == 1){
+								System.out.println("Enter a city:");
+								line = null;
+								while((city = in.readLine()) == null && city.length() == 0);
+							}
+							
+							//search by keyword
+							System.out.println("Would you like to add a keyword to search by?:");
+							System.out.println("1. Yes:");
+							System.out.println("2. No:");
+
+							i = 0;
+							line = null;
+							while(i != 1 && i != 2){
+								while((line = in.readLine())== null && line.length() == 0);
+								try{
+									i = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								line = null;
+
+							}
+							
+							//get keyword input
+							String keyword = null;
+							if(i == 1){
+								System.out.println("Enter a keyword:");
+								while((keyword = in.readLine()) == null && keyword.length() == 0);
+							}
+							
+							//search by category
+							System.out.println("Would you like to add a category to search by?:");
+							System.out.println("1. Yes:");
+							System.out.println("2. No:");
+
+							i = 0;
+							line = null;
+							while(i != 1 && i != 2){
+								while((line = in.readLine())== null && line.length() == 0);
+								try{
+									i = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								line = null;
+
+							}
+							
+							//get category input
+							String category = null;
+							if(i == 1){
+								System.out.println("Enter a category:");
+								while((category = in.readLine()) == null && category.length() == 0);
+							}
+							
+							System.out.println("How would you like to sort the results?:");
+							System.out.println("1. by price:");
+							System.out.println("2. by the average numerical score of the feedbacks:");
+							System.out.println("3. by the average numerical score of the trusted user feedbacks:");
+							i = 0;
+							line = null;
+							while(i != 1 && i != 2 && i != 3){
+								while((line = in.readLine())== null && line.length() == 0);
+								try{
+									i = Integer.parseInt(line);
+								}catch(Exception e){
+									continue;
+								}
+								
+								line = null;
+							}
+							
+							int sorting = i;
+							
+							System.out.println(housing.browseTemporaryHousing(lowerPriceRange, upperPriceRange, city, keyword, category, sorting, con.stmt));
 						}
 					}
 

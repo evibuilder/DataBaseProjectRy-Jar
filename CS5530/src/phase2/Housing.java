@@ -227,6 +227,22 @@ public class Housing {
 		
 		return result;
 	}
+	
+	//browses through the housing, return a string of information of TH(s) that is found
+	// lowerPriceRange = 0 means no input
+	// upperPriceRange = 0 means no input
+	// city = null means no input
+	// keyword = null means no input
+	// category = null means no input
+	// sorting = 1 means sort by price
+	// sorting = 2 means sort by the average numerical score of the feedbacks
+	// sorting = 3 means sort by the average numerical score of the trusted user feedbacks
+	public String browseTemporaryHousing(int lowerPriceRange, int upperPriceRange, String city, String keyword, String category, int sorting, Statement stmt){
+		String result = "";
+		
+		
+		return result;
+	}
 }
 
 
