@@ -1,5 +1,6 @@
 package phase2;
 
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Feedback {
@@ -9,8 +10,25 @@ public class Feedback {
 	
 	// records the score and comments for the given TH from the given user
 	public void recordFeedback(String username, int idOfTH, String date, int score, String comments, Statement stmt){
+		int rowsChanged = 0;
 		String sql="INSERT into Feedback(score, text, fbdate, hid, login) "
 				+ "VALUES ("+score+",'"+comments+"','"+date+"',"+idOfTH+",'"+username+"')";
+		
+		try{
+   		 	rowsChanged = stmt.executeUpdate(sql);
+   		 	
+   		 	if(rowsChanged > 0){
+   		 		
+   		 	}else{
+   		 		
+   		 	}
+   		 	
+		 	}
+		 	catch(SQLException e)
+		 	{
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+		 	}
 	}
 	
 	// rates the feedback from the given user, with a rating of 0,1, or 2
