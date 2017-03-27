@@ -17,7 +17,7 @@ public class Reservations {
 	
 	//makes a reservation given a userid and temp housing id
 	public String makeReservation(String username, int housingID, int periodID, Statement stmt){
-		int cost = getCostOfStay(username, housingID, periodID, stmt);
+		int cost = getPriceForReservation(housingID, periodID, stmt);
 		
 		String result = "";
 		int affectedRows = 0;
@@ -68,7 +68,7 @@ public class Reservations {
 			System.out.println(housing.displayPHinformation(id, stmt));
 		}
 	}
-	
+		
 	//checks that the user has a reservation with the given housing id
 	public boolean checkForReservation(String username, int housingID, int periodID, Statement stmt){
 		boolean result = false;
@@ -88,6 +88,35 @@ public class Reservations {
 		
 		return result;
 	}
+	
+	private int getPriceForReservation(int hid, int pid, Statement stmt){
+		int price = 0;
+		String sql = "SELECT price FROM Available WHERE hid ="+hid+" AND pid = "+pid+"";
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			price = rs.getInt("price");
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}finally{
+	 		try{
+   		 		if (rs!=null && !rs.isClosed())
+   		 			rs.close();
+		 		}
+		 		catch(Exception e)
+		 		{
+		 			System.out.println("cannot close resultset");
+		 		}
+		}
+		
+		return price;
+	}
+	
 	
 	private int getCostOfStay(String username, int hid, int pid, Statement stmt){
 		int cost = 0;
@@ -146,7 +175,7 @@ public class Reservations {
 	
 	public String removeReservation(String username, int hid, int pid, Statement stmt){
 		String result = "";
-		String sql = "DELETE FROM Reserve WHERE username ='"+username+"' AND hid = "+hid+" AND pid = "+pid+"";
+		String sql = "DELETE FROM Reserve WHERE login ='"+username+"' AND hid = "+hid+" AND pid = "+pid+"";
 		
 		int rowsAffected = 0;
 		

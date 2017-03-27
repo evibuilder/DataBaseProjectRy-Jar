@@ -11,7 +11,28 @@ public class Users {
 	
 	// returns a string containing names and ids of all users
 	public String showAllUsers(Statement stmt){
-		return null;
+		
+		String result = "";
+		String sql = "SELECT * FROM Users";
+		
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			result += "Login" + "\t" + "First Name" + "\t" + "Last Name" + "\n";
+			while(rs.next()){
+				result += rs.getString("login") + "\t" + rs.getString("firstname") + "\t\t" + rs.getString("lastname");
+				result += "\n";
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		return result;
 	}
 	
 	//rates the user from the given user with the rating or trusted or not-trusted
@@ -33,6 +54,7 @@ public class Users {
 		boolean result = false;
 		String sql="SELECT login from Users where login = '"+username+"'";
 		
+<<<<<<< HEAD
 		ResultSet rs = null;
 		
 	 	try{
@@ -48,10 +70,24 @@ public class Users {
 	     rs.close();
 	 	}
 	 	catch(SQLException e)
+=======
+		String sql = "SELECT * FROM Users WHERE login = '"+username+"'";
+		
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			if(rs.next()){
+				result = true;
+			}
+		}		 	
+		catch(SQLException e)
+>>>>>>> origin/master
 	 	{
 			System.err.println("cannot execute the query");
 			System.err.println("error: " + e.getMessage());
 	 	}
+<<<<<<< HEAD
 	 	finally
 	 	{
 	 		try{
@@ -63,6 +99,9 @@ public class Users {
 	 			System.out.println("cannot close resultset");
 	 		}
 	 	}
+=======
+		
+>>>>>>> origin/master
 		return result;
 	}
 	
