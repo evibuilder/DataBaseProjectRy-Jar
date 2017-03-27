@@ -16,6 +16,8 @@ public class Users {
 	
 	//rates the user from the given user with the rating or trusted or not-trusted
 	public void rateUser(String userDoingRating, String userGettingRated, String rating, Statement stmt){
+		String sql="INSERT into Feedback(login1, login2, isTrusted) "
+				+ "VALUES ("+userDoingRating+",'"+userGettingRated+"','"+rating+"')";
 		
 	}
 	
@@ -142,8 +144,150 @@ public class Users {
 	
 	//calculate two degrees of separation
 	public String calculateDegreeOfSeparation(String firstUserLogin, String secondUserLogin, Statement stmt){
-		
-		return null;
+		//getting the separation degree of login 1 and login 2
+		String result = null;
+		String sql1 = "select count(*)"
+						+ "from (select *"
+							+"from Favorites"
+							+"where login = '"+firstUserLogin+"')As f1,"
+							+"(select *"
+						+   "from Favorites"
+						+ "where login = 'r"+secondUserLogin+"')As f2"
+				         + "where f1.hid = f2.hid";
+		ResultSet rs = null;
+		try{
+	 		
+   		 	rs = stmt.executeQuery(sql1);
+   		 	rs.next();
+   		 	
+   	   		String sep = rs.getString("count(*)");
+   		 	
+
+		     rs.close();
+		     int isep = Integer.parseInt(sep);
+		     if(isep >= 1)
+		     {
+		    	 result = "1";
+		     }
+		     else
+		     {
+		    	 String sql2 = "select count(*)"
+							+ "from (select *"
+								+"from Favorites"
+								+"where login = '"+firstUserLogin+"')As f1,"
+								+"(select *"
+							+   "from Favorites"
+							+ "where login != 'r"+secondUserLogin+"')As f2"
+					         + "where f1.hid = f2.hid";
+		    	 ResultSet rs1 = null;
+		    	 try{
+				 		
+		    		 	
+		    		 	rs1 = stmt.executeQuery(sql1);
+		    		 	rs1.next();
+		    		 	
+		    		 	String sep2 = rs1.getString("count(*)");
+		    		 	int isep2 = Integer.parseInt(sep2);
+		    		 	String a;
+		    		 	if(isep2 >= 1)
+		    		 	{
+		    		 		a = "1";
+		    		 	}
+		    		 	else
+		    		 	{
+		    		 		a = "0";
+		    		 	}
+		    		 	
+
+		 		     rs1.close();
+		 		    String sql3 = "select count(*)"
+							+ "from (select *"
+								+"from Favorites"
+								+"where login = '"+firstUserLogin+"')As f1,"
+								+"(select *"
+							+   "from Favorites"
+							+ "where login != 'r"+secondUserLogin+"')As f2"
+					         + "where f1.hid = f2.hid";
+		 		    ResultSet rs2 = null;
+		 		   try{
+				 		
+		 	   		 	rs2 = stmt.executeQuery(sql3);
+		 	   		 	rs2.next();
+		 	   		 	String sep3 = rs2.getString("count(*)");
+		 	   	   		 	
+
+		 			     rs2.close();
+		 			     int isep3 = Integer.parseInt(sep3);
+		 			     String b;
+		 			     if(isep3 >= 1)
+		 			     {
+		 			    	 b = "1";
+		 			     }
+		 			     else
+		 			     {
+		 			    	 b = "0";
+		 			     }
+		 			     if(a.equals("1") && b.equals("1"))
+		 			     {
+		 			    	 result = "2";
+		 			     }
+		 			     else
+		 			     {
+		 			    	 result = "0";
+		 			     }
+		 			 	}
+		 			 	catch(SQLException e)
+		 			 	{
+		 					System.err.println("cannot execute the query");
+		 					System.err.println("error: " + e.getMessage());
+		 			 	}
+		 			 	finally
+		 			 	{
+		 			 		try{
+		 	   		 		if (rs!=null && !rs.isClosed())
+		 	   		 			rs.close();
+		 			 		}
+		 			 		catch(Exception e)
+		 			 		{
+		 			 			System.out.println("cannot close resultset");
+		 			 		}
+		 			 	}
+		 		 	}
+		 		 	catch(SQLException e)
+		 		 	{
+		 				System.err.println("cannot execute the query");
+		 				System.err.println("error: " + e.getMessage());
+		 		 	}
+		 		 	finally
+		 		 	{
+		 		 		try{
+		    		 		if (rs!=null && !rs.isClosed())
+		    		 			rs.close();
+		 		 		}
+		 		 		catch(Exception e)
+		 		 		{
+		 		 			System.out.println("cannot close resultset");
+		 		 		}
+		 		 	}
+		     }
+		 	}
+		 	catch(SQLException e)
+		 	{
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+		 	}
+		 	finally
+		 	{
+		 		try{
+   		 		if (rs!=null && !rs.isClosed())
+   		 			rs.close();
+		 		}
+		 		catch(Exception e)
+		 		{
+		 			System.out.println("cannot close resultset");
+		 		}
+		 	}
+		return result;
 	}
 	
 	//for the given user, make the TH their favorite
