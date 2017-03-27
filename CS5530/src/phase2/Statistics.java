@@ -104,8 +104,97 @@ public class Statistics {
 	}
 	
 	//returns as a string, a list of the most expensive TH
-	public String mostExpensiveTH(int numberOfResults, Statement stmt){
-		return null;
+	public void mostExpensiveTH(int numberOfResults, Statement stmt){
+		String sql = "select h.name, avg(cost) as avgCost, h.category "
+				+ "from Visit v, Housing h where"
+				+ " v.hid = h.hid AND h.category = 'Condo' "
+				+ "group by (h.hid) "
+				+ "order by (avgCost) DESC";
+		
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			System.out.println("Name  AvgCost  Category");
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		sql = "select h.name, avg(cost) as avgCost, h.category "
+				+ "from Visit v, Housing h where"
+				+ " v.hid = h.hid AND h.category = 'Studio' "
+				+ "group by (h.hid) "
+				+ "order by (avgCost) DESC";
+		
+		rs = null;
+		rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		sql = "select h.name, avg(cost) as avgCost, h.category "
+				+ "from Visit v, Housing h where"
+				+ " v.hid = h.hid AND h.category = 'House' "
+				+ "group by (h.hid) "
+				+ "order by (avgCost) DESC";
+		
+		rs = null;
+		rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
 	}
 	
 	//returns as a string, a list of the most highly rated PH

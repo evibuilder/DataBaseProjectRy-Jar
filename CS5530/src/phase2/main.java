@@ -890,7 +890,7 @@ public class main {
 							}
 
 							
-							System.out.println(stats.mostExpensiveTH(numResults, con.stmt));
+							stats.mostExpensiveTH(numResults, con.stmt);
 						} 
 						else if (c == 3) // most highly rated PH
 						{
@@ -905,7 +905,7 @@ public class main {
 							}
 
 							
-							System.out.println(stats.mostHighlyRatedPH(numResults, con.stmt));
+							stats.mostHighlyRatedPH(numResults, con.stmt);
 						}
 					}
 					
