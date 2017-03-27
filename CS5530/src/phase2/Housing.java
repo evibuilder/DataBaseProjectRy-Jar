@@ -183,6 +183,25 @@ public class Housing {
 		
 		return result;
 	}
+	
+	public String displayNameFromID(int hid, Statement stmt){
+		String result = "";
+		String sql = "SELECT name FROM Housing WHERE hid = "+hid+"";
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			result = rs.getString("name");
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		return result;
+	}
 
 	public String displayAllHousing(Statement stmt){
 		String result = "";

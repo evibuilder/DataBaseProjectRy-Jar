@@ -19,6 +19,19 @@ import com.mysql.jdbc.Statement;
 
 public class main {
 
+	private static List<Pair> reservationsInCart = null;
+	private static List<Pair> staysInCart = null;
+	
+	private static Housing housing = null;
+	private static Statistics stats = null;
+	private static Users user = null;
+	private static Reservations reservations = null;
+	private static Feedback feedback = null;;
+	private static Keywords keywords = null;
+	private static Period period = null;
+	
+	private static Connector con = null;
+	
 	public static void displayLoginMenu() {
 		System.out.println("        Welcome to the Uotel System     ");
 		System.out.println("1. Login:");
@@ -66,26 +79,17 @@ public class main {
 		System.out.println("4. Back to main menu:");
 		System.out.println("please enter your choice:");
 	}
-	
-	public static String displayReservations(){
-		return null;
-	}
-	
-	public static String displayStays(){
-		return null;
-	}
 
 	public static void main(String[] args) {
 
 		
-		Connector con = null;
 		String choice;
 		String username = "";
 		String sql = null;
 		int c = 0;
  
-		Set<Pair> reservationsInCart = new TreeSet<Pair>(); 
-		Set<Pair> staysInCart = new TreeSet<Pair>();
+		List<Pair> reservationsInCart = new ArrayList<Pair>();
+		List<Pair> staysInCart = new ArrayList<Pair>();
 		
 		Housing housing = new Housing();
 		Statistics stats = new Statistics();
@@ -208,41 +212,34 @@ public class main {
 							continue;
 						if (c == 1) // reserve TH
 						{
-							String nameOfTH;
-							System.out.println("Which temporary housing would you like to reserve?:");
-							while ((nameOfTH = in.readLine()) == null && nameOfTH.length() == 0);
-							
-							String results = housing.showHouseInformationWithName(nameOfTH, con.stmt);
-							
-							if(results.equals("")){
-								System.out.println("No housing was found with that name");
+							System.out.println(housing.displayAllHousing(con.stmt));
+						
+							System.out.println("Please select the ID of the temporary housing you would like to reserve:");
+							String line;
+							int idOfTH;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								idOfTH = Integer.parseInt(line);
+							}catch(Exception e){
+								System.out.println(e.getMessage());
+								continue;
+							}
+								
+							if(housing.checkHousingExists(idOfTH, con.stmt) == false){
+								System.out.println("That was not a valid temporary housing ID:");
 								c = 0;
+								continue;
 							}
 							else
 							{
-								System.out.println("The following temporary housing were found");
-								System.out.println(results);
-								System.out.println("Please select the ID of the temporary housing you would like to reserve:");
-								String line;
-								int idOfTH;
-								while((line = in.readLine()) == null && line.length() == 0);
-								try{
-									idOfTH = Integer.parseInt(line);
-								}catch(Exception e){
-									System.out.println(e.getMessage());
-									continue;
+								System.out.println("These are the available reservation peroids for this temporary housing:");
+								String periods = period.showAvailablePeriods(idOfTH, con.stmt);
+								if(periods.equals("")){
+									System.out.println("Sorry, but there are no available periods for this temporary housing:");
 								}
-								
-								if(housing.checkHousingExists(idOfTH, con.stmt) == false){
-									System.out.println("That was not a valid temporary housing ID:");
-									c = 0;
-									continue;
-								}
-								else
-								{
-									System.out.println("These are the available reservation peroids for this temporary housing:");
-									System.out.println(period.showAvailablePeriods(idOfTH, con.stmt));
+								else{
 									System.out.println("Please select the ID of the period for which you would like to reserve:");
+									System.out.println(periods);
 									line = null;
 									while ((line = in.readLine()) == null && line.length() == 0);
 									int periodID;
@@ -258,11 +255,12 @@ public class main {
 
 									System.out.println("The reservation was added to your cart");
 									
+									String nameOfTH = housing.displayNameFromID(idOfTH, con.stmt);
 									System.out.println("Users that recently reserved " + nameOfTH + " also visited the following temporary housing");
 									System.out.println(reservations.getSuggestedReservations(idOfTH, con.stmt));
 								}
 							}
-						} 
+						}
 						else if (c == 2) // record new PH
 						{
 							String thName;
@@ -761,51 +759,64 @@ public class main {
 				}
 				else 
 				{
-					System.out.println("Please review and confirm the following reservations:");
-					System.out.println(displayReservations());
-					int i = 0;
-					
-					System.out.println("1. Confirm reservations:");
-					System.out.println("2. Cancel reservations:");
-					String answer;
-					while ((answer = in.readLine()) == null && answer.length() == 0);
-					try{
-						i = Integer.parseInt(answer);
-					}catch(Exception e){
-						System.out.println(e.getMessage());
-					}
-					
-					
-					if(i == 1){
+					if(reservationsInCart.size() > 0){
+						System.out.println("Please review and confirm the following reservations:");
 						for(Pair p : reservationsInCart){
-							System.out.println(reservations.makeReservation(username, p.first(), p.second(), con.stmt));
-							System.out.println(period.removePeriodFromAvailability(p.first(),  p.second(), con.stmt));
+							System.out.println(housing.displayNameFromID(p.first(), con.stmt) + " " + period.displayFromAndTo(p.second(), con.stmt)
+							+ " " + period.displayCost(p.second(), con.stmt));
 						}
-					}else{
-						System.out.println("Reservations were discarded:");
-					}
-					
-					System.out.println("Please review and confirm the following stays:");
-					System.out.println(displayStays());
-					System.out.println("1. Confirm stays:");
-					System.out.println("2. Cancel stays:");
-					answer = null;
-					while ((answer = in.readLine()) == null && answer.length() == 0);
-					try{
-						i = Integer.parseInt(answer);
-					}catch(Exception e){
-						System.out.println(e.getMessage());
-					}
-					
-					if(i == 1){
-						for (Pair p : staysInCart){
-							System.out.println(reservations.recordStay(username, p.first(), p.second(), con.stmt));
-							System.out.println(reservations.removeReservation(username, p.first(), p.second(), con.stmt));
+						int i = 0;
+						
+						System.out.println("1. Confirm reservations:");
+						System.out.println("2. Cancel reservations:");
+						String answer;
+						while ((answer = in.readLine()) == null && answer.length() == 0);
+						try{
+							i = Integer.parseInt(answer);
+						}catch(Exception e){
+							System.out.println(e.getMessage());
+						}
+						
+						
+						if(i == 1){
+							for(Pair p : reservationsInCart){
+								System.out.println(reservations.makeReservation(username, p.first(), p.second(), con.stmt));
+								System.out.println(period.removePeriodFromAvailability(p.first(),  p.second(), con.stmt));
+							}
+						}else{
+							System.out.println("Reservations were discarded:");
 						}
 					}
-					else{
-						System.out.println("Stays were discarded:");
+
+
+					if(staysInCart.size() > 0){
+						System.out.println("Please review and confirm the following stays:");
+						for(Pair p : staysInCart){
+							System.out.println(housing.displayNameFromID(p.first(), con.stmt) + " " + period.displayFromAndTo(p.second(), con.stmt)
+							+ " " + period.displayCost(p.second(), con.stmt));
+						}
+						System.out.println("1. Confirm stays:");
+						System.out.println("2. Cancel stays:");
+						String answer = null;
+						int i = 0;
+						while ((answer = in.readLine()) == null && answer.length() == 0);
+						try{
+							i = Integer.parseInt(answer);
+						}catch(Exception e){
+							System.out.println(e.getMessage());
+						}
+						
+						if(i == 1){
+							for (Pair p : staysInCart){
+								System.out.println(reservations.recordStay(username, p.first(), p.second(), con.stmt));
+								System.out.println(reservations.removeReservation(username, p.first(), p.second(), con.stmt));
+							}
+						}
+						else{
+							System.out.println("Stays were discarded:");
+						}
 					}
+
 					
 					con.stmt.close();
 

@@ -13,7 +13,28 @@ public class Period {
 	
 	//returns a list of the available periods for the given house
 	public String showAvailablePeriods(int housingID, Statement stmt){
-		return null;
+		
+		String sql = "SELECT Period.pid, Period.datefrom, Period.dateto, Available.price "
+				+ "FROM Period "
+				+ "INNER JOIN Available ON Period.pid = Available.pid AND Available.hid = "+housingID+"";
+		
+		String result = "";
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			while(rs.next()){
+				result += rs.getString("pid") + " " + rs.getString("datefrom") + " " + rs.getString("dateto") + " $" + rs.getString("price");
+				result += "\n";
+			}
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		
+		return result;
 	}
 	
 	//checks that an id exists in the period table
@@ -34,8 +55,47 @@ public class Period {
 			if(rowsAffected == 0){
 				result = "There was an error processing the request:";
 			}else{
-				result = "Period is longer available to other users:";
+				result = "Period is no longer available to other users:";
 			}
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		return result;
+	}
+	
+	public String displayCost(int pid, Statement stmt){
+		String sql = "SELECT price FROM Available WHERE pid = "+pid+"";
+		String result = "";
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			
+			result += "$" + rs.getString("price");
+			
+		}catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
+		return result;
+	}
+	
+	//returns a string with columns from and to
+	public String displayFromAndTo(int pid, Statement stmt){
+		
+		String sql = "SELECT datefrom, dateto FROM Period WHERE pid = "+pid+"";
+		String result = "";
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			result += rs.getString("datefrom") + " " + rs.getString("dateto");
 			
 		}catch(SQLException e){
 			System.err.println("cannot execute the query");
@@ -74,7 +134,7 @@ public class Period {
 			rs = stmt.executeQuery(sql);
 
 			while(rs.next()){
-				System.out.println(rs.getString("pid") + "  " + rs.getDate("from").toString() + "  " + rs.getDate("to").toString());
+				System.out.println(rs.getString("pid") + "  " + rs.getDate("datefrom").toString() + "  " + rs.getDate("dateto").toString());
 			}
 		}catch(SQLException e){
 			System.err.println("cannot execute the query");
