@@ -80,6 +80,12 @@ public class main {
 		System.out.println("4. Back to main menu:");
 		System.out.println("please enter your choice:");
 	}
+	public static void displayAdminMenu(){
+		System.out.println("        Administrator Menu    ");
+		System.out.println("1. Display top most trusted users:");
+		System.out.println("2. Display top most useful users:");
+		System.out.println("please enter your choice:");
+	}
 
 	public static void main(String[] args) {
 
@@ -886,9 +892,9 @@ public class main {
 				else if(c == 5) //administration
 				{
 					if(user.isAdmin(username, con.stmt)){
-						System.out.println("What would you like to display?:");
-						System.out.println("1. Show most trusted users:");
-						System.out.println("2. Show most useful users:");
+						
+						displayAdminMenu();
+
 						int i = 0;
 						while(i != 1 && i != 2){
 							String line = null;
@@ -918,6 +924,7 @@ public class main {
 							System.out.println("Most useful users:\n");
 							System.out.println(stats.mostUsefulUsers(max, con.stmt));
 						}
+						
 					}
 					else
 					{
