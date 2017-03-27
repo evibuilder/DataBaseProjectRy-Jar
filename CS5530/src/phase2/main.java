@@ -79,6 +79,12 @@ public class main {
 		System.out.println("4. Back to main menu:");
 		System.out.println("please enter your choice:");
 	}
+	public static void displayAdminMenu(){
+		System.out.println("        Administrator Menu    ");
+		System.out.println("1. Award top most trusted users:");
+		System.out.println("2. Award top most useful users:");
+		System.out.println("please enter your choice:");
+	}
 
 	public static void main(String[] args) {
 
@@ -889,7 +895,9 @@ public class main {
 				else if(c == 5) //administration
 				{
 					if(user.isAdmin(username, con.stmt)){
-						//TODO: fill out admin rewards
+						displayAdminMenu();
+						
+						
 					}
 					else
 					{
