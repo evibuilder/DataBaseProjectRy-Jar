@@ -198,8 +198,97 @@ public class Statistics {
 	}
 	
 	//returns as a string, a list of the most highly rated PH
-	public String mostHighlyRatedPH(int numberOfResults, Statement stmt){
-		return null;
+	public void mostHighlyRatedPH(int numberOfResults, Statement stmt){
+		String sql = "select h.name, avg(score) as avgScore, h.category "
+				+ "from Feedback f, Housing h where"
+				+ " f.hid = h.hid AND h.category = 'Condo' "
+				+ "group by (h.hid) "
+				+ "order by (avgScore) DESC";
+		
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			System.out.println("Name  avgScore  Category");
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		sql = "select h.name, avg(score) as avgScore, h.category "
+				+ "from Feedback f, Housing h where"
+				+ " f.hid = h.hid AND h.category = 'Studio' "
+				+ "group by (h.hid) "
+				+ "order by (avgScore) DESC";
+		
+		rs = null;
+		rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		sql = "select h.name, avg(score) as avgScore, h.category "
+				+ "from Feedback f, Housing h where"
+				+ " f.hid = h.hid AND h.category = 'House' "
+				+ "group by (h.hid) "
+				+ "order by (avgScore) DESC";
+		
+		rs = null;
+		rsmd = null;
+		
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+		
+			int count = 0;
+			while(rs.next() && count < numberOfResults){
+				count++;
+				for(int i = 1; i <= colCount; i++){
+					System.out.print(rs.getString(i) + "  ");
+				}
+				System.out.println();
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
 	}
 	
 	public String mostUsefulUsers(int numberOfResults, Statement stmt){
