@@ -3,6 +3,8 @@ package phase2;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Statistics {
 
@@ -77,9 +79,81 @@ public class Statistics {
 	
 	public String mostUsefulFeedbackTH(int numberOfResults, int hid, Statement stmt){
 		String result = "";
-		String sql = "";
+		String sql = "SELECT r.fid, avg(r.rating) as avgRating "
+				+ "FROM Rates r, Feedback f "
+				+ "WHERE r.fid = f.fid AND f.hid = "+hid+" "
+				+ "GROUP BY r.fid " 
+				+ "ORDER BY avgRating DESC";
+		
+		ResultSet rs = null;
+		
+		List<Integer> fids = new ArrayList<Integer>();
+		List<Float> ratings = new ArrayList<Float>();
+		
+		try{
+			rs = stmt.executeQuery(sql);
+
+			while(rs.next()){
+				int fid = rs.getInt("fid");
+				float rating = rs.getFloat("avgRating");
+				fids.add(fid);
+				ratings.add(rating);
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	} 
+		
+		result += "fid\tscore\tcomments\t\t\t  date\taverage rating\n";
+
+		for(int i = 0; i < fids.size() && i < numberOfResults; i++){
+			int fid = fids.get(i);
+			float rating = ratings.get(i);
+			result += usefulFeedbackTHhelper(fid, rating, stmt);
+			result += "\n";
+		}
+		
+		return result;
+	}
+	
+	private String usefulFeedbackTHhelper(int fid, float rating, Statement stmt){
+		String result = "";
+		String sql = "Select * from Feedback where fid = "+fid+"";
+		
+		ResultSet rs = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next()){
+				result += rs.getInt("fid") + "\t" + rs.getInt("score") + "\t" + rs.getString("text") + "\t\t\t  " +
+						rs.getDate("fbdate").toString() + "\t" + rating;
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	} 
 		
 		
 		return result;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
