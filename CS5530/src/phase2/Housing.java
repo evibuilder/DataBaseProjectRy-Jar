@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Housing {
 
@@ -263,7 +265,126 @@ public class Housing {
 	public String browseTemporaryHousing(int lowerPriceRange, int upperPriceRange, String city, String keyword, String category, int sorting, Statement stmt){
 		String result = "";
 		
-		String sql = "select distinct * from Housing h, Available a";
+		String sql;
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		List<Integer> hids = new ArrayList<Integer>();
+		
+		if(upperPriceRange > 0){
+			sql = "select distinct h.hid from Housing h, Available a where price > "+lowerPriceRange+" AND price < "+upperPriceRange+"";
+		
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				
+				while(rs.next()){
+					int hid = rs.getInt("hid");
+					hids.add(hid);
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
+		
+		if(city != null){
+			sql = "select distinct h.hid from Housing h, Available a where city = '"+city+"'";
+			
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				
+				hids.clear();
+
+				
+				while(rs.next()){
+					int hid = rs.getInt("hid");
+					hids.add(hid);
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
+		
+		if(keyword != null){
+			sql = "select distinct h.hid from Keywords k, HasKeywords hk, Housing h "
+					+ "where k.word = '"+keyword+"' AND k.wid = hk.wid AND h.hid = hk.hid";
+			
+			
+			
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				
+				hids.clear();
+
+				
+				while(rs.next()){
+					int hid = rs.getInt("hid");
+					hids.add(hid);
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
+		
+		if(category != null){
+			sql = "select distinct hid from Housing where category = '"+category+"'";
+			
+			try{
+				rs = stmt.executeQuery(sql);
+				rsmd = rs.getMetaData();
+				
+				hids.clear();
+
+				
+				while(rs.next()){
+					int hid = rs.getInt("hid");
+					hids.add(hid);
+				}
+			}
+			catch(SQLException e){
+				System.err.println("cannot execute the query");
+				System.err.println("error: " + e.getMessage());
+			}
+		}
+		
+		if(sorting == 1){
+			for(int i = 0; i < hids.size(); i++){
+				int hid = hids.get(i);
+				result += byPrice(hid, stmt);
+			}
+		}
+		else if(sorting == 2){
+			for(int i = 0; i < hids.size(); i++){
+				int hid = hids.get(i);
+				result += byScoreFeedbacks(hid, stmt);
+			}
+		}
+		else if(sorting == 3){
+			for(int i = 0; i < hids.size(); i++){
+				int hid = hids.get(i);
+				result += byScoreTrustedFeedbacks(hid, stmt);
+			}
+		}
+		
+		return result;
+	}
+	
+	private String byPrice(int hid, Statement stmt){
+		String result = "";
+		
+		String sql = "select h.hid, h.name, h.city, h.category, h.URL, avg(price) as avgPrice "
+				+ "from Housing h, Available a WHERE"
+				+ " h.hid = a.hid AND h.hid = "+hid+" "
+				+ "group by h.hid "
+				+ "order by avgPrice DESC";
 		ResultSet rs = null;
 		ResultSetMetaData rsmd = null;
 		
@@ -274,9 +395,9 @@ public class Housing {
 			
 			while(rs.next()){
 				for(int i = 1; i <= colCount; i++){
-					System.out.print(rs.getString(i) + " ");
+					result += "$" + rs.getString(i) + " ";
 				}
-				System.out.println();
+				result += "\n";
 			}
 		}
 		catch(SQLException e){
@@ -284,46 +405,71 @@ public class Housing {
 			System.err.println("error: " + e.getMessage());
 		}
 		
-		if(upperPriceRange > 0){
-			sql = "select distinct * from Housing h, Available a where price > "+lowerPriceRange+" AND price < "+upperPriceRange+"";
+		return result;
+	}
+	
+	private String byScoreFeedbacks(int hid, Statement stmt){
+		String result = "";
 		
-			try{
-				rs = stmt.executeQuery(sql);
-				rsmd = rs.getMetaData();
-				int colCount = rsmd.getColumnCount();
-				
-				while(rs.next()){
-					for(int i = 1; i <= colCount; i++){
-						System.out.print(rs.getString(i) + " ");
-					}
-					System.out.println();
+		String sql = "select h1.hid, h1.name, h1.city, h1.category, h1.URL, avg(f.score) as AvgScore "
+				+ " from Feedback f left join Housing h1 on f.hid = h1.hid "
+				+ "where exists (select * from Housing h "
+				+ "where exists (select distinct login2 from Trust t "
+				+ "where t.login2 = f.login AND f.hid = h.hid AND h.hid = "+hid+" )) "
+						+ "group by h1.hid "
+						+ "order by AvgScore DESC";
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
+			
+			while(rs.next()){
+				for(int i = 1; i <= colCount; i++){
+					result += rs.getString(i) + " ";
 				}
-			}
-			catch(SQLException e){
-				System.err.println("cannot execute the query");
-				System.err.println("error: " + e.getMessage());
+				result += "\n";
 			}
 		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+		}
 		
-		if(city != null){
-			sql = "select distinct * from Housing h, Available a where city = '"+city+"'";
+		return result;
+	}
+	
+	private String byScoreTrustedFeedbacks(int hid, Statement stmt){
+		String result = "";
+		
+		String sql = "select h1.hid, h1.name, h1.city, h1.category, h1.URL, avg(f.score) as AvgScore "
+				+ " from Feedback f left join Housing h1 on f.hid = h1.hid "
+				+ "where exists (select * from Housing h "
+				+ "where exists (select distinct login2 from Trust t "
+				+ "where t.isTrusted = 1 AND t.login2 = f.login AND f.hid = h.hid AND h.hid = "+hid+" )) "
+						+ "group by h1.hid "
+						+ "order by AvgScore DESC";
+		
+		ResultSet rs = null;
+		ResultSetMetaData rsmd = null;
+		
+		try{
+			rs = stmt.executeQuery(sql);
+			rsmd = rs.getMetaData();
+			int colCount = rsmd.getColumnCount();
 			
-			try{
-				rs = stmt.executeQuery(sql);
-				rsmd = rs.getMetaData();
-				int colCount = rsmd.getColumnCount();
-				
-				while(rs.next()){
-					for(int i = 1; i <= colCount; i++){
-						System.out.print(rs.getString(i) + " ");
-					}
-					System.out.println();
+			while(rs.next()){
+				for(int i = 1; i <= colCount; i++){
+					result += rs.getString(i) + " ";
 				}
+				result += "\n";
 			}
-			catch(SQLException e){
-				System.err.println("cannot execute the query");
-				System.err.println("error: " + e.getMessage());
-			}
+		}
+		catch(SQLException e){
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
 		}
 		
 		return result;

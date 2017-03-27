@@ -15,8 +15,6 @@ import java.util.TreeSet;
 import java.sql.*;
 import java.io.*;
 
-//import com.mysql.jdbc.Statement;
-
 public class main {
 
 	private static List<Pair> reservationsInCart = null;
@@ -682,6 +680,11 @@ public class main {
 								System.out.println(e.getMessage());
 								continue;
 							}
+							
+							if(feedback.duplicateFeedback(username, idOfTH, con.stmt)){
+								System.out.println("You already gave feedback on that housing:");
+								continue;
+							}
 								
 							int score = -1;
 								
@@ -758,6 +761,11 @@ public class main {
 							}catch(Exception e){
 								System.out.println(e.getMessage());
 								throw e;
+							}
+							
+							if(feedback.assessingOwnFeedback(username, feedbackID, con.stmt)){
+								System.out.println("You cannot assess your own feedback:");
+								continue;
 							}
 							
 							System.out.println("What rating would you like to give this feedback?:");
@@ -873,6 +881,7 @@ public class main {
 					
 					//perform calculation
 					if(user.checkUserExists(firstUsername, con.stmt) && user.checkUserExists(secondUsername, con.stmt)){
+						System.out.print("Degree: ");
 						System.out.println(user.calculateDegreeOfSeparation(firstUsername, secondUsername, con.stmt));
 					}else{
 						System.out.println("Either one or both of the usernames provided were not valid:");

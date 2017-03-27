@@ -115,6 +115,51 @@ public class Feedback {
 		
 		return result;
 	}
+	
+	public boolean duplicateFeedback(String username, int hid, Statement stmt){
+		boolean result = false;
+		
+		String sql = "select * from Feedback where login = '"+username+"' AND hid = "+hid+"";
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+
+			if(rs.next()) result = true;
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		
+		return result;
+	}
+	
+	public boolean assessingOwnFeedback(String username, int fid, Statement stmt){
+		boolean result = false;
+
+		String sql = "select login from Feedback where fid = "+fid+"";
+		
+		ResultSet rs = null;
+		try{
+			rs = stmt.executeQuery(sql);
+
+			rs.next();
+			if(rs.getString("login").equals(username)){
+				result = true;
+			}
+		}		 	
+		catch(SQLException e)
+	 	{
+			System.err.println("cannot execute the query");
+			System.err.println("error: " + e.getMessage());
+	 	}
+		
+		
+		return result;
+	}
 }
 
 

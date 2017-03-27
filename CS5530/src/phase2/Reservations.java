@@ -66,7 +66,7 @@ public class Reservations {
 		
 		return result;
 	}
-	
+		
 	//makes a reservation given a userid and temp housing id
 	public String makeReservation(String username, int housingID, int periodID, Statement stmt){
 		int cost = getPriceForReservation(housingID, periodID, stmt);
