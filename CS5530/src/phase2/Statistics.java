@@ -28,4 +28,12 @@ public class Statistics {
 	public String mostTrustedUsers(int numberOfResults, Statement stmt){
 		return null;
 	}
+	
+	public String mostUsefulFeedbackTH(int numberOfResults, int hid, Statement stmt){
+		String result = "";
+		String sql = "";
+		
+		
+		return result;
+	}
 }

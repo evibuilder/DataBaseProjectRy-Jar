@@ -793,7 +793,30 @@ public class main {
 						}
 						else if (c == 4) //show most useful feedback for TH
 						{
+							System.out.println(housing.displayAllHousing(con.stmt));
+							System.out.println();
+							System.out.println("Please select the ID of the temporary housing you would like to view the most useful feedback on:");
+							String line;
+							int idOfTH;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								idOfTH = Integer.parseInt(line);
+							}catch(Exception e){
+								System.out.println(e.getMessage());
+								continue;
+							}
 							
+							System.out.println("Max number of results?:");
+							int max = 1;
+							line = null;
+							while((line = in.readLine()) == null && line.length() == 0);
+							try{
+								max = Integer.parseInt(line);
+							}catch(Exception e){
+								continue;
+							}
+							
+							System.out.println(stats.mostUsefulFeedbackTH(max,  idOfTH, con.stmt));
 						}
 						
 					}
